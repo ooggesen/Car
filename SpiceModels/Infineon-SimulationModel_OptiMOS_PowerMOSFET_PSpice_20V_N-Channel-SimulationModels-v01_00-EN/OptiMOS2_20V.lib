@@ -1,0 +1,39 @@
+
+.SUBCKT BSD214SN drain gate source Tj Tcase PARAMS: dVth=0 dRdson=0 dgfs=0 dC=0 Zthtype=0 Ls=1n Ld=0.5n Lg=1n
+
+.PARAM Rs=16.37m    Rg=11.3      Rd=240u      Rm=600u
+.PARAM Inn=1.5      Unn=4.5      Rmax=140m    gmin=2.1
+
+.PARAM act=0.122
+
+
+
+X1  d1 g s Tj S3_20_s_var PARAMS: a={act} dVth={dVth} dR={dRdson} dgfs={dgfs} Inn={Inn} Unn={Unn} 
+                                        +Rmax={Rmax} gmin={gmin} Rs={Rs} Rp={Rd} dC={dC} Rm={Rm}
+Rg    g1     g    {Rg}   
+Lg    gate   g1   {Lg*if(dgfs==99,0,1)}
+Gs    s1     s    VALUE={V(s1,s)/(Rs*(1+(limit(V(Tj),-200,999)-25)*4m)-Rm)}
+Rsa   s1     s    1Meg
+Ls    source s1   {Ls*if(dgfs==99,0,1)}
+Rda   d1     d2   {Rd}
+Ld    drain  d2   {Ld*if(dgfs==99,0,1)}
+RLs   source s1   10
+RLg   gate   g1   10
+RLd   drain  d2   10
+
+
+
+
+Rth1  Tj      t1              {215.74m+limit(Zthtype,0,1)*79.85m}
+Rth2  t1      t2              {2+limit(Zthtype,0,1)*734.81m}
+Rth3  t2      t3              {7.66+limit(Zthtype,0,1)*3.92}
+Rth4  t3      t4              {31.58+limit(Zthtype,0,1)*12.05}
+Rth5  t4      Tcase           {59.17+limit(Zthtype,0,1)*22.59}
+Cth1  Tj      0               849.255n
+Cth2  t1      0               2.681u
+Cth3  t2      0               16.282u
+Cth4  t3      0               121.071u
+Cth5  t4      0               493.707u
+Cth6  Tcase   0               2m
+
+.ENDS

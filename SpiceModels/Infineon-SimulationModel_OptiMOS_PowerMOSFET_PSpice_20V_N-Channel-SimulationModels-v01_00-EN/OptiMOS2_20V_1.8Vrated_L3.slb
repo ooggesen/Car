@@ -1,0 +1,451 @@
+*version 9.1 8260729
+@index
+symloc DMOS_S2_L3_n 0 1796 b
+symloc DMOS_N_L3 1796 4206 b
+symloc BSR802N:DMOS_S2_L3_n 6002 684
+symloc BSL802SN:DMOS_S2_L3_n 6686 685
+symloc BSS806N:DMOS_S2_L3_n 7371 684
+symloc BSS816NW:DMOS_S2_L3_n 8055 687
+symloc BSD816SN:DMOS_S2_L3_n 8742 687
+symloc BSL806N:DMOS_S2_L3_n 9429 684
+symloc BSD840N:DMOS_S2_L3_n 10113 684
+symloc BSS806NE:DMOS_S2_L3_n 10797 687
+*symbol DMOS_S2_L3_n b
+d Infineon DMOS with thermal network
+@type p 8.0
+@attributes
+a 0 sp 11 0 38 -3 hln 100 PART=DMOS_S2_L3_n
+a 0 sp 0 0 0 0 hln 100 TEMPLATE=X^@refdes %drain %gate %source %Tj %Tcase @MODEL PARAMS: ?dVth|dVth=@dVth| ?dRdson|dRdson=@dRdson| ?dgfs|dgfs=@dgfs| ?dC|dC=@dC| ?dZth|Zthtype=@dZth| ?Ls|Ls=@Ls| ?Ld|Ld=@Ld| ?Lg|Lg=@Lg| 
+a 0 s 9 0 -3 0 hcn 100 REFDES=X?
+a 0 sp 0:13 0 5 50 hcn 100 MODEL=DMOS_L3
+a 0 u 0:13 0 0 10 hlb 100 dVth=
+a 0 u 0:13 0 0 20 hlb 100 dRdson=
+a 0 u 0:13 0 0 30 hlb 100 dgfs=
+a 0 u 0:13 0 0 40 hlb 100 dC=
+a 0 u 0:13 0 0 50 hlb 100 dZth=
+a 0 u 0:13 0 0 10 hlb 100 Ls=2n
+a 0 u 0:13 0 0 20 hlb 100 Ld=2n
+a 0 u 0:13 0 0 30 hlb 100 Lg=3n
+@pins
+p 0 25 40 hcn 100 source n 30 40 v
+a 0 s 0:1 0 31 38 hln 100 PIN=3
+a 0 s 0 0 0 0 hln 100 ERC=x
+p 0 10 20 hcn 100 gate n 0 20 h
+a 0 s 0:1 0 1 18 hln 100 PIN=2
+a 0 s 0 0 0 0 hln 100 ERC=x
+p 0 25 10 hcn 100 drain n 30 0 d
+a 0 s 0:1 0 31 -2 hln 100 PIN=1
+a 0 s 0 0 0 0 hln 100 ERC=x
+p 0 70 8 hrn 100 Tj n 60 10 u
+a 0 s 0:1 0 51 16 hln 100 PIN=4
+a 0 s 0:13 0 60 10 hln 100 ERC=x
+a 0 s 0:13 0 0 10 hln 100 FLOAT=r
+p 0 88 26 hrn 100 Tcase n 60 30 u
+a 0 s 0:1 0 51 36 hln 100 PIN=5
+a 0 s 0:13 0 60 30 hln 100 ERC=x
+@graphics 60 40 0 0 10
+v 0 25 16
+20 20
+;
+v 0 20 20
+25 24
+;
+v 0 20 10
+30 10
+;
+v 0 20 30
+30 30
+;
+v 0 30 20
+20 20
+;
+v 0 10 20
+15 20
+;
+v 0 15 10
+15 30
+;
+v 0 30 20
+30 30
+;
+v 0 20 33
+20 27
+;
+v 0 20 13
+20 7
+;
+v 0 20 23
+20 17
+;
+v 0 38 10
+30 10
+;
+v 0 30 30
+38 30
+38 10
+;
+c 0 30 10 1 d_info:,,,,,ON,0/0/255,,,,,,,, 
+c 0 30 30 1 d_info:,,,,,ON,0/0/255,,,,,,,, 
+v 0 38 18 d_info:,,,,4/1/6/6,ON,0/0/255,,,,,,,, 
+35 22
+41 22
+38 18
+;
+r 0 35 17 41 18 d_info:,,,,,ON,0/0/255,,,,,,,, 
+c 0 25 20 20 d_info:,0/0/0,,,,,,,,,,,,, 
+z 26 54 6 hln 100 2 d_info:,,,,,,,,,,,,,5, 
+Tj
+z 26 46 27 hln 100 5 d_info:,,,,,,,,,,,,,5, 
+Tcase
+*symbol DMOS_N_L3 b
+d Infineon dual n-channel MOSFETwith coupled thermal network
+@type p 9.1
+@attributes
+a 1 sp 0 0 0 0 hcn 100 TEMPLATE=X^@refdes %drain1 %gate1 %source1 %drain1a %drain2 %gate2 %source2 %drain2a %Tj1 %Tsolder_joint1 %Tj2 %Tsolder_joint2 @MODEL PARAMS: ?dVth1|dVth1=@dVth1| ?dVth2|dVth2=@dVth2| ?dRdson1|dRdson1=@dRdson1| ?dRdson2|dRdson2=@dRdson2| ?dgfs1|dgfs1=@dgfs1| ?dgfs2|dgfs2=@dgfs2| ?dC1|dC1=@dC1| ?dC2|dC2=@dC2| ?dZth|Zthtype=@dZth| ?Ls|Ls=@Ls| ?Ld|Ld=@Ld| ?Lg|Lg=@Lg|
+a 0 s 9 0 79 10 hcn 100 REFDES=X?
+a 0 sp 11 0 106 96 hcn 100 PART=DMOS_N_L3
+a 0 sp 0 0 0 0 hln 100 MODEL=
+a 0 u 0:13 0 0 10 hln 100 dVth1=
+a 0 u 0:13 0 0 20 hln 100 dVth2=
+a 0 u 0:13 0 0 40 hln 100 dRdson1=
+a 0 u 0:13 0 0 50 hln 100 dRdson2=
+a 0 u 0:13 0 0 60 hln 100 dgfs1=
+a 0 u 0:13 0 0 70 hln 100 dgfs2=
+a 0 u 0:13 0 0 80 hln 100 dC1=
+a 0 u 0:13 0 0 90 hln 100 dC2=
+a 0 u 0:13 0 0 10 hln 100 dZth=
+a 0 u 0:13 0 0 10 hln 100 Ls=0
+a 0 u 0:13 0 0 20 hln 100 Ld=0
+a 0 u 0:13 0 0 30 hln 100 Lg=0
+@pins
+p 0 12 46 hcn 50 gate1 n 0 40 h
+a 0 s 0:1 0 3 44 hrn 30 PIN=2
+a 0 s 0 0 0 20 hln 100 ERC=x
+a 0 s 0:13 0 0 1 hln 100 FLOAT=r
+p 0 72 31 hrn 50 drain1 n 80 20 u
+a 0 s 0:1 0 76 25 hln 30 PIN=8
+a 0 s 0 0 80 -10 hln 100 ERC=x
+a 0 s 0:13 0 20 8 hln 100 FLOAT=r
+p 0 12 65 hcn 50 source2 n 0 60 h
+a 0 s 0:1 0 2 63 hcn 30 PIN=3
+a 0 s 0 0 40 30 hln 100 ERC=x
+a 0 s 0:13 0 0 1 hln 100 FLOAT=r
+p 0 12 86 hcn 50 gate2 n 0 80 h
+a 0 s 0:1 0 3 86 hcb 30 PIN=4
+a 0 s 0 0 0 60 hln 100 ERC=x
+a 0 s 0:13 0 0 1 hln 100 FLOAT=r
+p 0 72 69 hrn 50 drain2 n 80 60 u
+a 0 s 0:1 0 76 65 hln 30 PIN=6
+a 0 s 0 0 80 30 hln 100 ERC=x
+a 0 s 0:13 0 20 8 hln 100 FLOAT=r
+p 0 80 39 hrn 50 drain1a n 80 40 u
+a 0 s 0:1 0 76 45 hln 30 PIN=7
+a 0 s 0 0 80 10 hln 100 ERC=x
+a 0 s 0:13 0 20 8 hln 100 FLOAT=r
+p 0 80 79 hrn 50 drain2a n 80 80 u
+a 0 s 0:1 0 76 85 hln 30 PIN=5
+a 0 s 0 0 80 50 hln 100 ERC=x
+a 0 s 0:13 0 20 8 hln 100 FLOAT=r
+p 0 49 6 hln 50 Tj1 n 45 0 d
+a 0 s 0:1 0 47 9 drn 100 PIN=9
+a 0 s 0:13 0 45 0 hln 100 ERC=x
+a 0 s 0:13 0 15 0 hln 100 FLOAT=r
+p 0 47 98 hln 50 Tj2 n 45 100 v
+a 0 s 0:1 0 43 91 vrn 100 PIN=11
+a 0 s 0:13 0 45 100 hln 100 ERC=x
+a 0 s 0:13 0 15 8 hln 100 FLOAT=r
+p 0 12 26 hcn 50 source1 n 0 20 h
+a 0 s 0:1 0 3 24 hrn 30 PIN=1
+a 0 s 0:13 0 0 20 hln 100 ERC=x
+a 0 s 0:13 0 0 1 hln 100 FLOAT=r
+p 0 -2 98 hln 50 Tsolder_joint2 n 30 100 v
+a 0 s 0:1 0 28 91 vrn 100 PIN=12
+a 0 s 0:13 0 30 100 hln 100 ERC=x
+a 0 s 0:13 0 0 8 hln 100 FLOAT=r
+p 0 -2 6 hln 50 Tsolder_joint1 n 30 0 d
+a 0 s 0:1 0 32 9 drn 100 PIN=10
+a 0 s 0:13 0 30 0 hln 100 ERC=x
+a 0 s 0:13 0 0 0 hln 100 FLOAT=r
+@graphics 80 100 0 20 10
+r 0 7 0 72 100 d_info:,,,1,,,,,,,,,,, 
+c 0 39 70 19 d_info:,0/0/0,,,,,,,,,,,,, 
+c 0 39 31 19 d_info:,0/0/0,,,,,,,,,,,,, 
+v 0 19 20
+19 47
+44 47
+44 39
+;
+v 0 19 60
+19 86
+44 86
+44 80
+;
+v 0 44 60
+44 53
+59 53
+59 80
+;
+v 0 44 19
+44 14
+59 14
+59 40
+;
+v 0 52 60
+52 80
+42 80
+;
+v 0 52 20
+52 40
+42 40
+;
+v 0 10 40
+10 30
+28 30
+;
+v 0 28 70
+10 70
+10 80
+;
+v 0 52 70 d_info:,,,,4/1/6/6,ON,0/0/255,,,,,,,, 
+49 74
+55 74
+52 70
+;
+v 0 52 30 d_info:,,,,4/1/6/6,ON,0/0/255,,,,,,,, 
+49 34
+55 34
+52 30
+;
+v 0 38 27
+34 30
+;
+v 0 34 30
+38 33
+;
+v 0 37 73
+34 70
+;
+v 0 37 67
+34 70
+;
+r 0 49 70 55 71 d_info:,,,,,ON,0/0/255,,,,,,,, 
+r 0 49 30 55 31 d_info:,,,,,ON,0/0/255,,,,,,,, 
+c 0 44 20 1 d_info:,,,,,ON,0/0/255,,,,,,,, 
+c 0 59 20 1 d_info:,,,,,ON,0/0/255,,,,,,,, 
+c 0 44 40 1 d_info:,,,,,ON,0/0/255,,,,,,,, 
+c 0 59 60 1 d_info:,,,,,ON,0/0/255,,,,,,,, 
+c 0 44 60 1 d_info:,,,,,ON,0/0/255,,,,,,,, 
+c 0 44 80 1 d_info:,,,,,ON,0/0/255,,,,,,,, 
+v 0 52 60
+44 60
+;
+v 0 34 73
+34 67
+;
+v 0 52 20
+44 20
+;
+v 0 44 70
+34 70
+;
+v 0 34 33
+34 27
+;
+v 0 29 60
+29 80
+;
+v 0 34 23
+34 17
+;
+v 0 34 43
+34 37
+;
+v 0 44 30
+44 40
+;
+v 0 29 20
+29 40
+;
+v 0 44 30
+34 30
+;
+v 0 34 40
+44 40
+;
+v 0 34 20
+44 20
+;
+v 0 34 60
+44 60
+;
+v 0 34 80
+44 80
+;
+v 0 44 70
+44 80
+;
+v 0 10 20
+19 20
+;
+v 0 61 20
+70 20
+;
+v 0 59 40
+70 40
+;
+v 0 59 60
+70 60
+;
+v 0 59 80
+70 80
+;
+v 0 10 60
+19 60
+;
+v 0 34 83
+34 77
+;
+v 0 34 63
+34 57
+;
+v 0 61 20
+59 20
+;
+z 26 -10 6 hln 100 14 d_info:,,,,,,,,,,,,,6, 
+Tsolder_joint1
+z 26 46 6 hln 100 3 d_info:,,,,,,,,,,,,,6, 
+Tj1
+z 26 -10 96 hln 100 14 d_info:,,,,,,,,,,,,,6, 
+Tsolder_joint2
+z 26 48 96 hln 100 3 d_info:,,,,,,,,,,,,,6, 
+Tj2
+z 26 2 26 hln 100 1 d_info:,,,,,,,,,,,,,5, 
+1
+*symbol BSR802N ako DMOS_S2_L3_n
+d Infineon DMOS with thermal network
+@type p 8.0
+@attributes
+a 0 sp 11 0 38 -3 hln 100 PART=BSR802N
+a 0 sp 0 0 0 0 hln 100 TEMPLATE=X^@refdes %drain %gate %source %Tj %Tcase @MODEL PARAMS: ?dVth|dVth=@dVth| ?dRdson|dRdson=@dRdson| ?dgfs|dgfs=@dgfs| ?dC|dC=@dC| ?dZth|Zthtype=@dZth| ?Ls|Ls=@Ls| ?Ld|Ld=@Ld| ?Lg|Lg=@Lg| 
+a 0 s 9 0 -3 0 hcn 100 REFDES=X?
+a 0 sp 0:13 0 5 50 hcn 100 MODEL=BSR802N
+a 0 u 0:13 0 0 10 hlb 100 dVth=
+a 0 u 0:13 0 0 20 hlb 100 dRdson=
+a 0 u 0:13 0 0 30 hlb 100 dgfs=
+a 0 u 0:13 0 0 40 hlb 100 dC=
+a 0 u 0:13 0 0 50 hlb 100 dZth=
+a 0 u 0:13 0 0 10 hlb 100 Ls=0.8n
+a 0 u 0:13 0 0 20 hlb 100 Ld=1n
+a 0 u 0:13 0 0 30 hlb 100 Lg=3n
+*symbol BSL802SN ako DMOS_S2_L3_n
+d Infineon DMOS with thermal network
+@type p 8.0
+@attributes
+a 0 sp 11 0 38 -3 hln 100 PART=BSL802SN
+a 0 sp 0 0 0 0 hln 100 TEMPLATE=X^@refdes %drain %gate %source %Tj %Tcase @MODEL PARAMS: ?dVth|dVth=@dVth| ?dRdson|dRdson=@dRdson| ?dgfs|dgfs=@dgfs| ?dC|dC=@dC| ?dZth|Zthtype=@dZth| ?Ls|Ls=@Ls| ?Ld|Ld=@Ld| ?Lg|Lg=@Lg| 
+a 0 s 9 0 -3 0 hcn 100 REFDES=X?
+a 0 sp 0:13 0 5 50 hcn 100 MODEL=BSL802SN
+a 0 u 0:13 0 0 10 hlb 100 dVth=
+a 0 u 0:13 0 0 20 hlb 100 dRdson=
+a 0 u 0:13 0 0 30 hlb 100 dgfs=
+a 0 u 0:13 0 0 40 hlb 100 dC=
+a 0 u 0:13 0 0 50 hlb 100 dZth=
+a 0 u 0:13 0 0 10 hlb 100 Ls=1n
+a 0 u 0:13 0 0 20 hlb 100 Ld=1n
+a 0 u 0:13 0 0 30 hlb 100 Lg=3n
+*symbol BSS806N ako DMOS_S2_L3_n
+d Infineon DMOS with thermal network
+@type p 8.0
+@attributes
+a 0 sp 11 0 38 -3 hln 100 PART=BSS806N
+a 0 sp 0 0 0 0 hln 100 TEMPLATE=X^@refdes %drain %gate %source %Tj %Tcase @MODEL PARAMS: ?dVth|dVth=@dVth| ?dRdson|dRdson=@dRdson| ?dgfs|dgfs=@dgfs| ?dC|dC=@dC| ?dZth|Zthtype=@dZth| ?Ls|Ls=@Ls| ?Ld|Ld=@Ld| ?Lg|Lg=@Lg| 
+a 0 s 9 0 -3 0 hcn 100 REFDES=X?
+a 0 sp 0:13 0 5 50 hcn 100 MODEL=BSS806N
+a 0 u 0:13 0 0 10 hlb 100 dVth=
+a 0 u 0:13 0 0 20 hlb 100 dRdson=
+a 0 u 0:13 0 0 30 hlb 100 dgfs=
+a 0 u 0:13 0 0 40 hlb 100 dC=
+a 0 u 0:13 0 0 50 hlb 100 dZth=
+a 0 u 0:13 0 0 10 hlb 100 Ls=1n
+a 0 u 0:13 0 0 20 hlb 100 Ld=0.5n
+a 0 u 0:13 0 0 30 hlb 100 Lg=2n
+*symbol BSS816NW ako DMOS_S2_L3_n
+d Infineon DMOS with thermal network
+@type p 8.0
+@attributes
+a 0 sp 11 0 38 -3 hln 100 PART=BSS816NW
+a 0 sp 0 0 0 0 hln 100 TEMPLATE=X^@refdes %drain %gate %source %Tj %Tcase @MODEL PARAMS: ?dVth|dVth=@dVth| ?dRdson|dRdson=@dRdson| ?dgfs|dgfs=@dgfs| ?dC|dC=@dC| ?dZth|Zthtype=@dZth| ?Ls|Ls=@Ls| ?Ld|Ld=@Ld| ?Lg|Lg=@Lg| 
+a 0 s 9 0 -3 0 hcn 100 REFDES=X?
+a 0 sp 0:13 0 5 50 hcn 100 MODEL=BSS816NW
+a 0 u 0:13 0 0 10 hlb 100 dVth=
+a 0 u 0:13 0 0 20 hlb 100 dRdson=
+a 0 u 0:13 0 0 30 hlb 100 dgfs=
+a 0 u 0:13 0 0 40 hlb 100 dC=
+a 0 u 0:13 0 0 50 hlb 100 dZth=
+a 0 u 0:13 0 0 10 hlb 100 Ls=1n
+a 0 u 0:13 0 0 20 hlb 100 Ld=0.5n
+a 0 u 0:13 0 0 30 hlb 100 Lg=1n
+*symbol BSD816SN ako DMOS_S2_L3_n
+d Infineon DMOS with thermal network
+@type p 8.0
+@attributes
+a 0 sp 11 0 38 -3 hln 100 PART=BSD816SN
+a 0 sp 0 0 0 0 hln 100 TEMPLATE=X^@refdes %drain %gate %source %Tj %Tcase @MODEL PARAMS: ?dVth|dVth=@dVth| ?dRdson|dRdson=@dRdson| ?dgfs|dgfs=@dgfs| ?dC|dC=@dC| ?dZth|Zthtype=@dZth| ?Ls|Ls=@Ls| ?Ld|Ld=@Ld| ?Lg|Lg=@Lg| 
+a 0 s 9 0 -3 0 hcn 100 REFDES=X?
+a 0 sp 0:13 0 5 50 hcn 100 MODEL=BSD816SN
+a 0 u 0:13 0 0 10 hlb 100 dVth=
+a 0 u 0:13 0 0 20 hlb 100 dRdson=
+a 0 u 0:13 0 0 30 hlb 100 dgfs=
+a 0 u 0:13 0 0 40 hlb 100 dC=
+a 0 u 0:13 0 0 50 hlb 100 dZth=
+a 0 u 0:13 0 0 10 hlb 100 Ls=1n
+a 0 u 0:13 0 0 20 hlb 100 Ld=0.5n
+a 0 u 0:13 0 0 30 hlb 100 Lg=1n
+*symbol BSL806N ako DMOS_S2_L3_n
+d Infineon DMOS with thermal network
+@type p 9.1
+@attributes
+a 0 sp 11 0 38 -3 hln 100 PART=BSL806N
+a 0 sp 0 0 0 0 hln 100 TEMPLATE=X^@refdes %drain %gate %source %Tj %Tcase @MODEL PARAMS: ?dVth|dVth=@dVth| ?dRdson|dRdson=@dRdson| ?dgfs|dgfs=@dgfs| ?dC|dC=@dC| ?dZth|Zthtype=@dZth| ?Ls|Ls=@Ls| ?Ld|Ld=@Ld| ?Lg|Lg=@Lg| 
+a 0 s 9 0 -3 0 hcn 100 REFDES=X?
+a 0 sp 0:13 0 5 50 hcn 100 MODEL=BSL806N
+a 0 u 0:13 0 0 10 hlb 100 dVth=
+a 0 u 0:13 0 0 20 hlb 100 dRdson=
+a 0 u 0:13 0 0 30 hlb 100 dgfs=
+a 0 u 0:13 0 0 40 hlb 100 dC=
+a 0 u 0:13 0 0 50 hlb 100 dZth=
+a 0 u 0:13 0 0 10 hlb 100 Ls=1n
+a 0 u 0:13 0 0 20 hlb 100 Ld=0.5n
+a 0 u 0:13 0 0 30 hlb 100 Lg=2n
+*symbol BSD840N ako DMOS_S2_L3_n
+d Infineon DMOS with thermal network
+@type p 9.1
+@attributes
+a 0 sp 11 0 38 -3 hln 100 PART=BSD840N
+a 0 sp 0 0 0 0 hln 100 TEMPLATE=X^@refdes %drain %gate %source %Tj %Tcase @MODEL PARAMS: ?dVth|dVth=@dVth| ?dRdson|dRdson=@dRdson| ?dgfs|dgfs=@dgfs| ?dC|dC=@dC| ?dZth|Zthtype=@dZth| ?Ls|Ls=@Ls| ?Ld|Ld=@Ld| ?Lg|Lg=@Lg| 
+a 0 s 9 0 -3 0 hcn 100 REFDES=X?
+a 0 sp 0:13 0 5 50 hcn 100 MODEL=BSD840N
+a 0 u 0:13 0 0 10 hlb 100 dVth=
+a 0 u 0:13 0 0 20 hlb 100 dRdson=
+a 0 u 0:13 0 0 30 hlb 100 dgfs=
+a 0 u 0:13 0 0 40 hlb 100 dC=
+a 0 u 0:13 0 0 50 hlb 100 dZth=
+a 0 u 0:13 0 0 10 hlb 100 Ls=1n
+a 0 u 0:13 0 0 20 hlb 100 Ld=0.5n
+a 0 u 0:13 0 0 30 hlb 100 Lg=1n
+*symbol BSS806NE ako DMOS_S2_L3_n
+d Infineon DMOS with thermal network
+@type p 9.1
+@attributes
+a 0 sp 11 0 38 -3 hln 100 PART=BSS806NE
+a 0 sp 0 0 0 0 hln 100 TEMPLATE=X^@refdes %drain %gate %source %Tj %Tcase @MODEL PARAMS: ?dVth|dVth=@dVth| ?dRdson|dRdson=@dRdson| ?dgfs|dgfs=@dgfs| ?dC|dC=@dC| ?dZth|Zthtype=@dZth| ?Ls|Ls=@Ls| ?Ld|Ld=@Ld| ?Lg|Lg=@Lg| 
+a 0 s 9 0 -3 0 hcn 100 REFDES=X?
+a 0 sp 0:13 0 5 50 hcn 100 MODEL=BSS806NE
+a 0 u 0:13 0 0 10 hlb 100 dVth=
+a 0 u 0:13 0 0 20 hlb 100 dRdson=
+a 0 u 0:13 0 0 30 hlb 100 dgfs=
+a 0 u 0:13 0 0 40 hlb 100 dC=
+a 0 u 0:13 0 0 50 hlb 100 dZth=
+a 0 u 0:13 0 0 10 hlb 100 Ls=1n
+a 0 u 0:13 0 0 20 hlb 100 Ld=0.5n
+a 0 u 0:13 0 0 30 hlb 100 Lg=2n

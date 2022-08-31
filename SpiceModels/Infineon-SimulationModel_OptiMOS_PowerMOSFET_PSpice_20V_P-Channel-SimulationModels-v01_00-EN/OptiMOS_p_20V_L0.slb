@@ -1,0 +1,233 @@
+*version 9.1 3709595059
+@index
+symloc DMOS_L1P60 0 1040 b
+symloc BSL207SP_L0:DMOS_L1P60 1040 268
+symloc BSL211SP_L0:DMOS_L1P60 1308 268
+symloc BSO201SP_L0:DMOS_L1P60 1576 268
+symloc BSO203SP_L0:DMOS_L1P60 1844 268
+symloc BSO203P_L0:DMOS_L1P60 2112 265
+symloc BSO204P_L0:DMOS_L1P60 2377 265
+symloc BSO207P_L0:DMOS_L1P60 2642 265
+symloc BSO211P_L0:DMOS_L1P60 2907 265
+symloc BSK204SP_L0:DMOS_L1P60 3172 268
+symloc BSK211P_L0:DMOS_L1P60 3440 265
+symloc BSS209PW_L0:DMOS_L1P60 3705 268
+symloc BSS223PW_L0:DMOS_L1P60 3973 268
+symloc BSD223P_L0:DMOS_L1P60 4241 265
+symloc BSV236SP_L0:DMOS_L1P60 4506 268
+symloc BSA223SP_L0:DMOS_L1P60 4774 268
+symloc SISC2_8P02_L0:DMOS_L1P60 5042 274
+symloc BSS215P_L0:DMOS_L1P60 5316 265
+symloc BSL215P_L0:DMOS_L1P60 5581 265
+*symbol DMOS_L1P60 b
+d p-channel DMOS 
+@type p 9.2
+@attributes
+a 0 sp 11 0 39 62 hln 100 PART=DMOS_L1P
+a 0 sp 0 0 0 0 hln 100 TEMPLATE=X^@refdes %drain %gate %source @MODEL
+a 0 s 9 0 -3 0 hcn 100 REFDES=X?
+a 0 sp 0:13 0 5 50 hcn 100 MODEL=DMOS_L1
+@pins
+p 0 25 40 hcn 100 drain n 30 40 v
+a 0 s 0:1 0 31 38 hln 100 PIN=1
+a 0 s 0 0 0 0 hln 100 ERC=x
+p 0 10 20 hcn 100 gate n 0 20 h
+a 0 s 0:1 0 1 18 hln 100 PIN=2
+a 0 s 0 0 0 0 hln 100 ERC=x
+p 0 25 10 hcn 100 source n 30 0 d
+a 0 s 0:1 0 31 -2 hln 100 PIN=3
+a 0 s 0 0 0 0 hln 100 ERC=x
+@graphics 60 40 0 0 10
+v 0 23 17
+26 20
+;
+v 0 23 23
+26 20
+;
+v 0 20 10
+30 10
+;
+v 0 20 30
+30 30
+;
+v 0 30 20
+20 20
+;
+v 0 10 20
+15 20
+;
+v 0 15 10
+15 30
+;
+v 0 30 10
+30 20
+;
+v 0 20 33
+20 27
+;
+v 0 20 13
+20 7
+;
+v 0 20 23
+20 17
+;
+v 0 38 10
+30 10
+;
+c 0 30 10 1 d_info:,,,,,ON,0/0/255,,,,,,,, 
+c 0 30 30 1 d_info:,,,,,ON,0/0/255,,,,,,,, 
+v 0 36 21 d_info:,,,,4/1/6/6,ON,0/0/255,,,,,,,, 
+35 22
+41 22
+38 18
+;
+r 0 35 17 41 18 d_info:,,,,,ON,0/0/255,,,,,,,, 
+c 0 25 20 20 d_info:,0/0/0,,,,,,,,,,,,, 
+v 0 38 10
+38 30
+31 30
+;
+*symbol BSL207SP_L0 ako DMOS_L1P60
+d p-channel DMOS 
+@type p 8.0
+@attributes
+a 0 sp 11 0 39 62 hln 100 PART=BSL207SP_L0
+a 0 sp 0 0 0 0 hln 100 TEMPLATE=X^@refdes %drain %gate %source @MODEL
+a 0 s 9 0 -3 0 hcn 100 REFDES=X?
+a 0 sp 0:13 0 5 50 hcn 100 MODEL=BSL207SP_L0
+*symbol BSL211SP_L0 ako DMOS_L1P60
+d p-channel DMOS 
+@type p 8.0
+@attributes
+a 0 sp 11 0 39 62 hln 100 PART=BSL211SP_L0
+a 0 sp 0 0 0 0 hln 100 TEMPLATE=X^@refdes %drain %gate %source @MODEL
+a 0 s 9 0 -3 0 hcn 100 REFDES=X?
+a 0 sp 0:13 0 5 50 hcn 100 MODEL=BSL211SP_L0
+*symbol BSO201SP_L0 ako DMOS_L1P60
+d p-channel DMOS 
+@type p 8.0
+@attributes
+a 0 sp 11 0 39 62 hln 100 PART=BSO201SP_L0
+a 0 sp 0 0 0 0 hln 100 TEMPLATE=X^@refdes %drain %gate %source @MODEL
+a 0 s 9 0 -3 0 hcn 100 REFDES=X?
+a 0 sp 0:13 0 5 50 hcn 100 MODEL=BSO201SP_L0
+*symbol BSO203SP_L0 ako DMOS_L1P60
+d p-channel DMOS 
+@type p 8.0
+@attributes
+a 0 sp 11 0 39 62 hln 100 PART=BSO203SP_L0
+a 0 sp 0 0 0 0 hln 100 TEMPLATE=X^@refdes %drain %gate %source @MODEL
+a 0 s 9 0 -3 0 hcn 100 REFDES=X?
+a 0 sp 0:13 0 5 50 hcn 100 MODEL=BSO203SP_L0
+*symbol BSO203P_L0 ako DMOS_L1P60
+d p-channel DMOS 
+@type p 8.0
+@attributes
+a 0 sp 11 0 39 62 hln 100 PART=BSO203P_L0
+a 0 sp 0 0 0 0 hln 100 TEMPLATE=X^@refdes %drain %gate %source @MODEL
+a 0 s 9 0 -3 0 hcn 100 REFDES=X?
+a 0 sp 0:13 0 5 50 hcn 100 MODEL=BSO203P_L0
+*symbol BSO204P_L0 ako DMOS_L1P60
+d p-channel DMOS 
+@type p 8.0
+@attributes
+a 0 sp 11 0 39 62 hln 100 PART=BSO204P_L0
+a 0 sp 0 0 0 0 hln 100 TEMPLATE=X^@refdes %drain %gate %source @MODEL
+a 0 s 9 0 -3 0 hcn 100 REFDES=X?
+a 0 sp 0:13 0 5 50 hcn 100 MODEL=BSO204P_L0
+*symbol BSO207P_L0 ako DMOS_L1P60
+d p-channel DMOS 
+@type p 8.0
+@attributes
+a 0 sp 11 0 39 62 hln 100 PART=BSO207P_L0
+a 0 sp 0 0 0 0 hln 100 TEMPLATE=X^@refdes %drain %gate %source @MODEL
+a 0 s 9 0 -3 0 hcn 100 REFDES=X?
+a 0 sp 0:13 0 5 50 hcn 100 MODEL=BSO207P_L0
+*symbol BSO211P_L0 ako DMOS_L1P60
+d p-channel DMOS 
+@type p 8.0
+@attributes
+a 0 sp 11 0 39 62 hln 100 PART=BSO211P_L0
+a 0 sp 0 0 0 0 hln 100 TEMPLATE=X^@refdes %drain %gate %source @MODEL
+a 0 s 9 0 -3 0 hcn 100 REFDES=X?
+a 0 sp 0:13 0 5 50 hcn 100 MODEL=BSO211P_L0
+*symbol BSK204SP_L0 ako DMOS_L1P60
+d p-channel DMOS 
+@type p 8.0
+@attributes
+a 0 sp 11 0 39 62 hln 100 PART=BSK204SP_L0
+a 0 sp 0 0 0 0 hln 100 TEMPLATE=X^@refdes %drain %gate %source @MODEL
+a 0 s 9 0 -3 0 hcn 100 REFDES=X?
+a 0 sp 0:13 0 5 50 hcn 100 MODEL=BSK204SP_L0
+*symbol BSK211P_L0 ako DMOS_L1P60
+d p-channel DMOS 
+@type p 8.0
+@attributes
+a 0 sp 11 0 39 62 hln 100 PART=BSK211P_L0
+a 0 sp 0 0 0 0 hln 100 TEMPLATE=X^@refdes %drain %gate %source @MODEL
+a 0 s 9 0 -3 0 hcn 100 REFDES=X?
+a 0 sp 0:13 0 5 50 hcn 100 MODEL=BSK211P_L0
+*symbol BSS209PW_L0 ako DMOS_L1P60
+d p-channel DMOS 
+@type p 8.0
+@attributes
+a 0 sp 11 0 39 62 hln 100 PART=BSS209PW_L0
+a 0 sp 0 0 0 0 hln 100 TEMPLATE=X^@refdes %drain %gate %source @MODEL
+a 0 s 9 0 -3 0 hcn 100 REFDES=X?
+a 0 sp 0:13 0 5 50 hcn 100 MODEL=BSS209PW_L0
+*symbol BSS223PW_L0 ako DMOS_L1P60
+d p-channel DMOS 
+@type p 8.0
+@attributes
+a 0 sp 11 0 39 62 hln 100 PART=BSS223PW_L0
+a 0 sp 0 0 0 0 hln 100 TEMPLATE=X^@refdes %drain %gate %source @MODEL
+a 0 s 9 0 -3 0 hcn 100 REFDES=X?
+a 0 sp 0:13 0 5 50 hcn 100 MODEL=BSS223PW_L0
+*symbol BSD223P_L0 ako DMOS_L1P60
+d p-channel DMOS 
+@type p 8.0
+@attributes
+a 0 sp 11 0 39 62 hln 100 PART=BSD223P_L0
+a 0 sp 0 0 0 0 hln 100 TEMPLATE=X^@refdes %drain %gate %source @MODEL
+a 0 s 9 0 -3 0 hcn 100 REFDES=X?
+a 0 sp 0:13 0 5 50 hcn 100 MODEL=BSD223P_L0
+*symbol BSV236SP_L0 ako DMOS_L1P60
+d p-channel DMOS 
+@type p 8.0
+@attributes
+a 0 sp 11 0 39 62 hln 100 PART=BSV236SP_L0
+a 0 sp 0 0 0 0 hln 100 TEMPLATE=X^@refdes %drain %gate %source @MODEL
+a 0 s 9 0 -3 0 hcn 100 REFDES=X?
+a 0 sp 0:13 0 5 50 hcn 100 MODEL=BSV236SP_L0
+*symbol BSA223SP_L0 ako DMOS_L1P60
+d p-channel DMOS 
+@type p 8.0
+@attributes
+a 0 sp 11 0 39 62 hln 100 PART=BSA223SP_L0
+a 0 sp 0 0 0 0 hln 100 TEMPLATE=X^@refdes %drain %gate %source @MODEL
+a 0 s 9 0 -3 0 hcn 100 REFDES=X?
+a 0 sp 0:13 0 5 50 hcn 100 MODEL=BSA223SP_L0
+*symbol SISC2_8P02_L0 ako DMOS_L1P60
+d p-channel DMOS 
+@type p 8.0
+@attributes
+a 0 sp 11 0 39 62 hln 100 PART=SISC2_8P02_L0
+a 0 sp 0 0 0 0 hln 100 TEMPLATE=X^@refdes %drain %gate %source @MODEL
+a 0 s 9 0 -3 0 hcn 100 REFDES=X?
+a 0 sp 0:13 0 5 50 hcn 100 MODEL=SISC2_8P02_L0
+*symbol BSS215P_L0 ako DMOS_L1P60
+d p-channel DMOS 
+@type p 9.1
+@attributes
+a 0 sp 11 0 39 62 hln 100 PART=BSS215P_L0
+a 0 sp 0 0 0 0 hln 100 TEMPLATE=X^@refdes %drain %gate %source @MODEL
+a 0 s 9 0 -3 0 hcn 100 REFDES=X?
+a 0 sp 0:13 0 5 50 hcn 100 MODEL=BSS215P_L0
+*symbol BSL215P_L0 ako DMOS_L1P60
+d p-channel DMOS 
+@type p 9.1
+@attributes
+a 0 sp 11 0 39 62 hln 100 PART=BSL215P_L0
+a 0 sp 0 0 0 0 hln 100 TEMPLATE=X^@refdes %drain %gate %source @MODEL
+a 0 s 9 0 -3 0 hcn 100 REFDES=X?
+a 0 sp 0:13 0 5 50 hcn 100 MODEL=BSL215P_L0

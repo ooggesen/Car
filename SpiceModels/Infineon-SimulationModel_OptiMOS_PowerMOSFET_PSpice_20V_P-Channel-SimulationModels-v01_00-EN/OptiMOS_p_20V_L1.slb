@@ -1,0 +1,608 @@
+*version 9.1 984956430
+@index
+symloc DMOS_L1P 0 1251 b
+symloc DMOS_P_L1 1251 3452 b
+symloc DMOS_P3_L1 4703 3061 b
+symloc BSO201SP_L1:DMOS_L1P 7764 357
+symloc BSO203SP_L1:DMOS_L1P 8121 353
+symloc BSO203P_L1:DMOS_P_L1 8474 495
+symloc BSO204P_L1:DMOS_P_L1 8969 495
+symloc BSO207P_L1:DMOS_P_L1 9464 495
+symloc BSO211P_L1:DMOS_P_L1 9959 495
+symloc BSL207SP_L1:DMOS_L1P 10454 353
+symloc BSL211SP_L1:DMOS_L1P 10807 353
+symloc BSS209PW_L1:DMOS_L1P 11160 353
+symloc BSS223PW_L1:DMOS_L1P 11513 353
+symloc BSD223P_L1:DMOS_P3_L1 11866 478
+symloc BSV236SP_L1:DMOS_L1P 12344 353
+symloc BSA223SP_L1:DMOS_L1P 12697 357
+symloc SISC2.8P02_L1:DMOS_L1P 13054 359
+symloc BSS215P_L1:DMOS_L1P 13413 350
+symloc BSL215P_L1:DMOS_L1P 13763 354
+*symbol DMOS_L1P b
+d p-channel DMOS 
+@type p 9.2
+@attributes
+a 0 sp 11 0 39 62 hln 100 PART=DMOS_L1P
+a 0 sp 0 0 0 0 hln 100 TEMPLATE=X^@refdes %drain %gate %source @MODEL PARAMS: ?dVth|dVth=@dVth| ?dRdson|dRdson=@dRdson| ?dgfs|dgfs=@dgfs| ?dC|dC=@dC| 
+a 0 s 9 0 -3 0 hcn 100 REFDES=X?
+a 0 sp 0:13 0 5 50 hcn 100 MODEL=DMOS_L1
+a 0 u 0:13 0 0 10 hlb 100 dVth=0
+a 0 u 0:13 0 0 10 hlb 100 dRdson=0
+a 0 u 0:13 0 0 20 hlb 100 dgfs=0
+a 0 u 0:13 0 0 30 hlb 100 dC=0
+@pins
+p 0 25 40 hcn 100 drain n 30 40 v
+a 0 s 0:1 0 31 38 hln 100 PIN=1
+a 0 s 0 0 0 0 hln 100 ERC=x
+p 0 10 20 hcn 100 gate n 0 20 h
+a 0 s 0:1 0 1 18 hln 100 PIN=2
+a 0 s 0 0 0 0 hln 100 ERC=x
+p 0 25 10 hcn 100 source n 30 0 d
+a 0 s 0:1 0 31 -2 hln 100 PIN=3
+a 0 s 0 0 0 0 hln 100 ERC=x
+@graphics 60 40 0 0 10
+v 0 23 17
+26 20
+;
+v 0 23 23
+26 20
+;
+v 0 20 10
+30 10
+;
+v 0 20 30
+30 30
+;
+v 0 30 20
+20 20
+;
+v 0 10 20
+15 20
+;
+v 0 15 10
+15 30
+;
+v 0 30 10
+30 20
+;
+v 0 20 33
+20 27
+;
+v 0 20 13
+20 7
+;
+v 0 20 23
+20 17
+;
+v 0 38 10
+30 10
+;
+c 0 30 10 1 d_info:,,,,,ON,0/0/255,,,,,,,, 
+c 0 30 30 1 d_info:,,,,,ON,0/0/255,,,,,,,, 
+v 0 36 21 d_info:,,,,4/1/6/6,ON,0/0/255,,,,,,,, 
+35 22
+41 22
+38 18
+;
+r 0 35 17 41 18 d_info:,,,,,ON,0/0/255,,,,,,,, 
+c 0 25 20 20 d_info:,0/0/0,,,,,,,,,,,,, 
+v 0 38 10
+38 30
+31 30
+;
+*symbol DMOS_P_L1 b
+d Dual p-channel enhancement MOSFET
+@type p 9.2
+@attributes
+a 1 sp 0 0 0 0 hcn 100 TEMPLATE=X^@refdes %drain1 %gate1 %source1 %drain1a %drain2 %gate2 %source2 %drain2a @MODEL PARAMS: ?dVth1|dVth1=@dVth1| ?dVth2|dVth2=@dVth2| ?dRdson1|dRdson1=@dRdson1| ?dRdson2|dRdson2=@dRdson2| ?dgfs1|dgfs1=@dgfs1| ?dgfs2|dgfs2=@dgfs2| ?dC1|dC1=@dC1| ?dC2|dC2=@dC2|
+a 0 s 9 0 77 6 hcn 100 REFDES=X?
+a 0 sp 11 0 34 96 hcn 100 PART=DMOS_P_L1
+a 0 sp 0:13 0 4 40 hcn 100 MODEL=
+a 0 u 0:13 0 0 10 hcn 100 dVth1=0
+a 0 u 0:13 0 0 20 hcn 100 dVth2=0
+a 0 u 0:13 0 0 30 hcn 100 dRdson1=0
+a 0 u 0:13 0 0 40 hcn 100 dRdson2=0
+a 0 u 0:13 0 0 50 hcn 100 dgfs1=0
+a 0 u 0:13 0 0 60 hcn 100 dgfs2=0
+a 0 u 0:13 0 0 70 hcn 100 dC1=0
+a 0 u 0:13 0 0 80 hcn 100 dC2=0
+@pins
+p 0 8 38 hcn 50 gate1 n 0 30 h
+a 0 s 0:1 0 1 28 hrn 30 PIN=2
+a 0 s 0 0 0 10 hln 100 ERC=x
+a 0 s 0:13 0 0 -2 hln 100 FLOAT=r
+p 0 70 21 hrn 50 drain1 n 70 10 u
+a 0 s 1 0 66 15 hln 30 PIN=8
+a 0 s 0 0 70 -20 hln 100 ERC=x
+a 0 s 0:13 0 10 -2 hln 100 FLOAT=r
+p 0 10 47 hcn 50 source2 n 0 50 h
+a 0 s 0:1 0 2 51 hrn 100 PIN=3
+a 0 s 0 0 40 20 hln 100 ERC=x
+a 0 s 0:13 0 0 -2 hln 100 FLOAT=r
+p 0 8 78 hcn 50 gate2 n 0 70 h
+a 0 s 0:1 0 1 74 hlb 30 PIN=4
+a 0 s 0 0 0 50 hln 100 ERC=x
+a 0 s 0:13 0 0 -2 hln 100 FLOAT=r
+p 0 70 63 hrn 50 drain2 n 70 50 u
+a 0 s 0:1 0 72 55 hln 100 PIN=6
+a 0 s 0 0 70 20 hln 100 ERC=x
+a 0 s 0:13 0 10 -2 hln 100 FLOAT=r
+p 0 70 29 hrn 50 drain1a n 70 30 u
+a 0 s 0:1 0 72 35 hln 100 PIN=7
+a 0 s 0 0 70 0 hln 100 ERC=x
+a 0 s 0:13 0 10 -2 hln 100 FLOAT=r
+p 0 70 69 hrn 50 drain2a n 70 70 u
+a 0 s 0:1 0 66 73 hln 30 PIN=5
+a 0 s 0 0 70 40 hln 100 ERC=x
+a 0 s 0:13 0 10 -2 hln 100 FLOAT=r
+p 0 10 8 hcn 50 source1 n 0 10 h
+a 0 s 1 0 3 14 hcn 30 PIN=1
+a 0 s 0:13 0 0 10 hln 100 ERC=x
+a 0 s 0:13 0 0 -2 hln 100 FLOAT=r
+@graphics 70 85 0 20 10
+r 0 4 0 64 83 d_info:,,,1,,,,,,,,,,, 
+c 0 35 22 19 d_info:,0/0/0,,,,,,,,,,,,, 
+c 0 35 60 19 d_info:,0/0/0,,,,,,,,,,,,, 
+v 0 15 10
+15 37
+40 37
+40 29
+;
+v 0 40 50
+40 43
+55 43
+55 70
+;
+v 0 40 9
+40 4
+55 4
+55 30
+;
+v 0 48 50
+48 70
+38 70
+;
+v 0 48 10
+48 30
+38 30
+;
+v 0 25 60
+10 60
+10 70
+;
+v 0 25 20
+10 20
+10 30
+;
+v 0 48 60 d_info:,,,,4/1/6/6,ON,0/0/255,,,,,,,, 
+51 56
+45 56
+48 60
+;
+v 0 48 20 d_info:,,,,4/1/6/6,ON,0/0/255,,,,,,,, 
+51 16
+45 16
+48 20
+;
+v 0 38 20
+33 16
+;
+v 0 38 20
+33 24
+;
+v 0 38 60
+33 56
+;
+v 0 33 64
+38 60
+;
+r 0 45 60 51 61 d_info:,,,,,ON,0/0/255,,,,,,,, 
+r 0 45 20 51 21 d_info:,,,,,ON,0/0/255,,,,,,,, 
+c 0 40 50 1 d_info:,,,,,ON,0/0/255,,,,,,,, 
+c 0 40 70 1 d_info:,,,,,ON,0/0/255,,,,,,,, 
+c 0 55 50 1 d_info:,,,,,ON,0/0/255,,,,,,,, 
+c 0 40 30 1 d_info:,,,,,ON,0/0/255,,,,,,,, 
+c 0 40 10 1 d_info:,,,,,ON,0/0/255,,,,,,,, 
+c 0 55 10 1 d_info:,,,,,ON,0/0/255,,,,,,,, 
+v 0 30 63
+30 57
+;
+v 0 30 53
+30 47
+;
+v 0 40 60
+40 70
+;
+v 0 25 50
+25 70
+;
+v 0 48 50
+40 50
+;
+v 0 40 60
+30 60
+;
+v 0 30 50
+40 50
+;
+v 0 30 23
+30 17
+;
+v 0 30 70
+40 70
+;
+v 0 30 33
+30 27
+;
+v 0 40 20
+40 30
+;
+v 0 25 10
+25 30
+;
+v 0 40 20
+30 20
+;
+v 0 48 10
+40 10
+;
+v 0 30 13
+30 7
+;
+v 0 30 30
+40 30
+;
+v 0 10 10
+15 10
+;
+v 0 10 50
+15 50
+;
+v 0 55 10
+60 10
+;
+v 0 55 30
+61 30
+;
+v 0 55 50
+61 50
+;
+v 0 55 70
+60 70
+;
+v 0 30 10
+40 10
+;
+v 0 30 73
+30 67
+;
+z 26 -2 6 hln 100 7 d_info:,,,,,,,,,,,,,6, 
+source1
+v 0 15 50
+15 76
+40 76
+40 70
+;
+z 26 -2 48 hln 100 7 d_info:,,,,,,,,,,,,,6, 
+source2
+z 26 -2 36 hln 100 5 d_info:,,,,,,,,,,,,,6, 
+gate1
+z 26 -2 76 hln 100 5 d_info:,,,,,,,,,,,,,6, 
+gate2
+z 26 56 22 hln 100 6 d_info:,,,,,,,,,,,,,6, 
+drain1
+z 26 54 62 hln 100 6 d_info:,,,,,,,,,,,,,6, 
+drain2
+*symbol DMOS_P3_L1 b
+d Dual p-channel MOSFETwith coupled thermal network
+@type p 9.2
+@attributes
+a 1 sp 0 0 0 0 hcn 100 TEMPLATE=X^@refdes %drain1 %gate1 %source1 %drain2 %gate2 %source2 @MODEL PARAMS: ?dVth1|dVth1=@dVth1| ?dVth2|dVth2=@dVth2| ?dRdson1|dRdson1=@dRdson1| ?dRdson2|dRdson2=@dRdson2| ?dgfs1|dgfs1=@dgfs1| ?dgfs2|dgfs2=@dgfs2| ?dC1|dC1=@dC1| ?dC2|dC2=@dC2| 
+a 0 s 9 0 79 10 hcn 100 REFDES=X?
+a 0 sp 11 0 106 96 hcn 100 PART=DMOS_P3_L1
+a 0 sp 0 0 0 0 hln 100 MODEL=BSD223P_L1
+a 0 u 0:13 0 0 10 hln 100 dVth1=0
+a 0 u 0:13 0 0 20 hln 100 dVth2=0
+a 0 u 0:13 0 0 30 hln 100 dRdson1=0
+a 0 u 0:13 0 0 40 hln 100 dRdson2=0
+a 0 u 0:13 0 0 50 hln 100 dgfs1=0
+a 0 u 0:13 0 0 60 hln 100 dgfs2=0
+a 0 u 0:13 0 0 70 hln 100 dC1=0
+a 0 u 0:13 0 0 80 hln 100 dC2=0
+@pins
+p 0 12 56 hcn 50 gate1 n 0 50 h
+a 0 s 1 0 3 54 hrn 30 PIN=2
+a 0 s 0 0 0 30 hln 100 ERC=x
+a 0 s 0:13 0 0 11 hln 100 FLOAT=r
+p 0 12 85 hcn 50 drain2 n 0 80 h
+a 0 s 1 0 2 83 hcn 30 PIN=3
+a 0 s 0 0 40 50 hln 100 ERC=x
+a 0 s 0:13 0 0 21 hln 100 FLOAT=r
+p 0 68 78 hrn 50 source2 n 80 80 u
+a 0 s 1 0 76 84 hlb 30 PIN=4
+a 0 s 0 0 80 100 hln 100 ERC=x
+a 0 s 0:13 0 80 159 hln 100 FLOAT=r
+p 0 72 29 hrn 50 drain1 n 80 20 u
+a 0 s 1 0 76 25 hln 30 PIN=6
+a 0 s 0 0 80 -10 hln 100 ERC=x
+a 0 s 0:13 0 20 -32 hln 100 FLOAT=r
+p 0 80 49 hrn 50 gate2 n 80 50 u
+a 0 s 1 0 76 55 hln 30 PIN=5
+a 0 s 0 0 80 20 hln 100 ERC=x
+a 0 s 0:13 0 20 -22 hln 100 FLOAT=r
+p 0 12 26 hcn 50 source1 n 0 20 h
+a 0 s 1 0 3 24 hrn 30 PIN=1
+a 0 s 0:13 0 0 20 hln 100 ERC=x
+a 0 s 0:13 0 0 1 hln 100 FLOAT=r
+@graphics 80 100 0 20 10
+r 0 7 0 72 100 d_info:,,,1,,,,,,,,,,, 
+c 0 39 70 19 d_info:,0/0/0,,,,,,,,,,,,, 
+c 0 39 31 19 d_info:,0/0/0,,,,,,,,,,,,, 
+v 0 52 20
+52 40
+42 40
+;
+v 0 31 81
+31 61
+41 61
+;
+v 0 37 26
+42 30
+;
+v 0 42 30
+37 34
+;
+v 0 46 67
+41 71
+;
+v 0 41 71
+46 75
+;
+r 0 28 73 34 74 d_info:,,,,,ON,0/0/255,,,,,,,, 
+r 0 49 28 55 29 d_info:,,,,,ON,0/0/255,,,,,,,, 
+c 0 44 40 1 d_info:,,,,,ON,0/0/255,,,,,,,, 
+c 0 44 20 1 d_info:,,,,,ON,0/0/255,,,,,,,, 
+c 0 39 81 1 d_info:,,,,,ON,0/0/255,,,,,,,, 
+c 0 39 61 1 d_info:,,,,,ON,0/0/255,,,,,,,, 
+v 0 49 68
+49 74
+;
+v 0 31 81
+39 81
+;
+v 0 52 20
+44 20
+;
+v 0 39 71
+49 71
+;
+v 0 34 33
+34 27
+;
+v 0 54 81
+54 61
+;
+v 0 34 23
+34 17
+;
+v 0 34 43
+34 37
+;
+v 0 44 20
+44 30
+;
+v 0 29 20
+29 40
+;
+v 0 44 30
+34 30
+;
+v 0 34 40
+44 40
+;
+v 0 34 20
+44 20
+;
+v 0 49 81
+39 81
+;
+v 0 49 61
+39 61
+;
+v 0 39 81
+39 71
+;
+v 0 10 20
+19 20
+;
+v 0 49 58
+49 64
+;
+v 0 49 78
+49 84
+;
+v 0 52 29 d_info:,,,,4/1/6/6,ON,0/0/255,,,,,,,, 
+49 33
+55 33
+52 29
+;
+v 0 44 40
+44 50
+59 50
+59 20
+71 20
+;
+v 0 31 73 d_info:,,,,4/1/6/6,ON,0/0/255,,,,,,,, 
+34 69
+28 69
+31 73
+;
+v 0 70 50
+64 50
+64 72
+54 72
+;
+v 0 39 81
+39 89
+68 89
+68 80
+71 80
+;
+v 0 10 80
+15 80
+15 52
+39 52
+39 61
+;
+v 0 10 50
+10 30
+29 30
+;
+z 26 1 46 hln 100 5 d_info:,,,,,,,,,,,,,6, 
+gate1
+z 26 64 46 hln 100 5 d_info:,,,,,,,,,,,,,6, 
+gate2
+z 26 1 16 hln 100 7 d_info:,,,,,,,,,,,,,6, 
+source1
+z 26 59 77 hln 100 7 d_info:,,,,,,,,,,,,,6, 
+source2
+z 26 63 17 hln 100 6 d_info:,,,,,,,,,,,,,6, 
+drain1
+z 26 1 77 hln 100 6 d_info:,,,,,,,,,,,,,6, 
+drain2
+v 0 44 12
+44 19
+;
+v 0 44 12
+19 12
+19 20
+;
+*symbol BSO201SP_L1 ako DMOS_L1P
+d Infineon p-channel MOSFET
+@type p 9.1
+@attributes
+a 0 sp 11 0 39 62 hln 100 PART=BSO201SP_L1
+a 0 sp 0 0 0 0 hln 100 TEMPLATE=X^@refdes %drain %gate %source @MODEL PARAMS: ?dVth|dVth=@dVth| ?dRdson|dRdson=@dRdson| ?dgfs|dgfs=@dgfs| ?dC|dC=@dC| 
+a 0 s 9 0 -3 0 hcn 100 REFDES=X?
+a 0 sp 0:13 0 5 50 hcn 100 MODEL=BSO201SP_L1
+*symbol BSO203SP_L1 ako DMOS_L1P
+d Infineon p-channel MOSFET
+@type p
+@attributes
+a 0 sp 11 0 39 62 hln 100 PART=BSO203SP_L1
+a 0 sp 0 0 0 0 hln 100 TEMPLATE=X^@refdes %drain %gate %source @MODEL PARAMS: ?dVth|dVth=@dVth| ?dRdson|dRdson=@dRdson| ?dgfs|dgfs=@dgfs| ?dC|dC=@dC| 
+a 0 s 9 0 -3 0 hcn 100 REFDES=X?
+a 0 sp 0:13 0 5 50 hcn 100 MODEL=BSO203SP_L1
+*symbol BSO203P_L1 ako DMOS_P_L1
+d Infineon dual p-channel MOSFET
+@type p
+@attributes
+a 1 sp 0 0 0 0 hcn 100 TEMPLATE=X^@refdes %drain1 %gate1 %source1 %drain1a %drain2 %gate2 %source2 %drain2a @MODEL PARAMS: ?dVth1|dVth1=@dVth1| ?dVth2|dVth2=@dVth2| ?dRdson1|dRdson1=@dRdson1| ?dRdson2|dRdson2=@dRdson2| ?dgfs1|dgfs1=@dgfs1| ?dgfs2|dgfs2=@dgfs2| ?dC1|dC1=@dC1| ?dC2|dC2=@dC2| 
+a 0 s 9 0 79 10 hcn 100 REFDES=X?
+a 0 sp 11 0 106 96 hcn 100 PART=BSO203P_L1
+a 0 sp 0 0 0 0 hln 100 MODEL=BSO203P_L1
+*symbol BSO204P_L1 ako DMOS_P_L1
+d Infineon dual p-channel MOSFET
+@type p
+@attributes
+a 1 sp 0 0 0 0 hcn 100 TEMPLATE=X^@refdes %drain1 %gate1 %source1 %drain1a %drain2 %gate2 %source2 %drain2a @MODEL PARAMS: ?dVth1|dVth1=@dVth1| ?dVth2|dVth2=@dVth2| ?dRdson1|dRdson1=@dRdson1| ?dRdson2|dRdson2=@dRdson2| ?dgfs1|dgfs1=@dgfs1| ?dgfs2|dgfs2=@dgfs2| ?dC1|dC1=@dC1| ?dC2|dC2=@dC2| 
+a 0 s 9 0 79 10 hcn 100 REFDES=X?
+a 0 sp 11 0 106 96 hcn 100 PART=BSO204P_L1
+a 0 sp 0 0 0 0 hln 100 MODEL=BSO204P_L1
+*symbol BSO207P_L1 ako DMOS_P_L1
+d Infineon dual p-channel MOSFET
+@type p
+@attributes
+a 1 sp 0 0 0 0 hcn 100 TEMPLATE=X^@refdes %drain1 %gate1 %source1 %drain1a %drain2 %gate2 %source2 %drain2a @MODEL PARAMS: ?dVth1|dVth1=@dVth1| ?dVth2|dVth2=@dVth2| ?dRdson1|dRdson1=@dRdson1| ?dRdson2|dRdson2=@dRdson2| ?dgfs1|dgfs1=@dgfs1| ?dgfs2|dgfs2=@dgfs2| ?dC1|dC1=@dC1| ?dC2|dC2=@dC2| 
+a 0 s 9 0 79 10 hcn 100 REFDES=X?
+a 0 sp 11 0 106 96 hcn 100 PART=BSO207P_L1
+a 0 sp 0 0 0 0 hln 100 MODEL=BSO207P_L1
+*symbol BSO211P_L1 ako DMOS_P_L1
+d Infineon dual p-channel MOSFET
+@type p
+@attributes
+a 1 sp 0 0 0 0 hcn 100 TEMPLATE=X^@refdes %drain1 %gate1 %source1 %drain1a %drain2 %gate2 %source2 %drain2a @MODEL PARAMS: ?dVth1|dVth1=@dVth1| ?dVth2|dVth2=@dVth2| ?dRdson1|dRdson1=@dRdson1| ?dRdson2|dRdson2=@dRdson2| ?dgfs1|dgfs1=@dgfs1| ?dgfs2|dgfs2=@dgfs2| ?dC1|dC1=@dC1| ?dC2|dC2=@dC2| 
+a 0 s 9 0 79 10 hcn 100 REFDES=X?
+a 0 sp 11 0 106 96 hcn 100 PART=BSO211P_L1
+a 0 sp 0 0 0 0 hln 100 MODEL=BSO211P_L1
+*symbol BSL207SP_L1 ako DMOS_L1P
+d Infineon p-channel MOSFET
+@type p
+@attributes
+a 0 sp 11 0 39 62 hln 100 PART=BSL207SP_L1
+a 0 sp 0 0 0 0 hln 100 TEMPLATE=X^@refdes %drain %gate %source @MODEL PARAMS: ?dVth|dVth=@dVth| ?dRdson|dRdson=@dRdson| ?dgfs|dgfs=@dgfs| ?dC|dC=@dC| 
+a 0 s 9 0 -3 0 hcn 100 REFDES=X?
+a 0 sp 0:13 0 5 50 hcn 100 MODEL=BSL207SP_L1
+*symbol BSL211SP_L1 ako DMOS_L1P
+d Infineon p-channel MOSFET
+@type p
+@attributes
+a 0 sp 11 0 39 62 hln 100 PART=BSL211SP_L1
+a 0 sp 0 0 0 0 hln 100 TEMPLATE=X^@refdes %drain %gate %source @MODEL PARAMS: ?dVth|dVth=@dVth| ?dRdson|dRdson=@dRdson| ?dgfs|dgfs=@dgfs| ?dC|dC=@dC| 
+a 0 s 9 0 -3 0 hcn 100 REFDES=X?
+a 0 sp 0:13 0 5 50 hcn 100 MODEL=BSL211SP_L1
+*symbol BSS209PW_L1 ako DMOS_L1P
+d Infineon p-channel MOSFET
+@type p
+@attributes
+a 0 sp 11 0 39 62 hln 100 PART=BSS209PW_L1
+a 0 sp 0 0 0 0 hln 100 TEMPLATE=X^@refdes %drain %gate %source @MODEL PARAMS: ?dVth|dVth=@dVth| ?dRdson|dRdson=@dRdson| ?dgfs|dgfs=@dgfs| ?dC|dC=@dC| 
+a 0 s 9 0 -3 0 hcn 100 REFDES=X?
+a 0 sp 0:13 0 5 50 hcn 100 MODEL=BSS209PW_L1
+*symbol BSS223PW_L1 ako DMOS_L1P
+d Infineon p-channel MOSFET
+@type p
+@attributes
+a 0 sp 11 0 39 62 hln 100 PART=BSS223PW_L1
+a 0 sp 0 0 0 0 hln 100 TEMPLATE=X^@refdes %drain %gate %source @MODEL PARAMS: ?dVth|dVth=@dVth| ?dRdson|dRdson=@dRdson| ?dgfs|dgfs=@dgfs| ?dC|dC=@dC| 
+a 0 s 9 0 -3 0 hcn 100 REFDES=X?
+a 0 sp 0:13 0 5 50 hcn 100 MODEL=BSS223PW_L1
+*symbol BSD223P_L1 ako DMOS_P3_L1
+d Infineon dual p-channel MOSFET
+@type p
+@attributes
+a 1 sp 0 0 0 0 hcn 100 TEMPLATE=X^@refdes %drain1 %gate1 %source1 %drain2 %gate2 %source2 @MODEL PARAMS: ?dVth1|dVth1=@dVth1| ?dVth2|dVth2=@dVth2| ?dRdson1|dRdson1=@dRdson1| ?dRdson2|dRdson2=@dRdson2| ?dgfs1|dgfs1=@dgfs1| ?dgfs2|dgfs2=@dgfs2| ?dC1|dC1=@dC1| ?dC2|dC2=@dC2| 
+a 0 s 9 0 79 10 hcn 100 REFDES=X?
+a 0 sp 11 0 106 96 hcn 100 PART=BSD223P_L1
+a 0 sp 0 0 0 0 hln 100 MODEL=BSD223P_L1
+*symbol BSV236SP_L1 ako DMOS_L1P
+d Infineon p-channel MOSFET
+@type p
+@attributes
+a 0 sp 11 0 39 62 hln 100 PART=BSV236SP_L1
+a 0 sp 0 0 0 0 hln 100 TEMPLATE=X^@refdes %drain %gate %source @MODEL PARAMS: ?dVth|dVth=@dVth| ?dRdson|dRdson=@dRdson| ?dgfs|dgfs=@dgfs| ?dC|dC=@dC| 
+a 0 s 9 0 -3 0 hcn 100 REFDES=X?
+a 0 sp 0:13 0 5 50 hcn 100 MODEL=BSV236SP_L1
+*symbol BSA223SP_L1 ako DMOS_L1P
+d Infineon p-channel MOSFET
+@type p 9.2
+@attributes
+a 0 sp 11 0 39 62 hln 100 PART=BSA223SP_L1
+a 0 sp 0 0 0 0 hln 100 TEMPLATE=X^@refdes %drain %gate %source @MODEL PARAMS: ?dVth|dVth=@dVth| ?dRdson|dRdson=@dRdson| ?dgfs|dgfs=@dgfs| ?dC|dC=@dC| 
+a 0 s 9 0 -3 0 hcn 100 REFDES=X?
+a 0 sp 0:13 0 5 50 hcn 100 MODEL=BSA223SP_L1
+*symbol SISC2.8P02_L1 ako DMOS_L1P
+d Infineon p-channel MOSFET
+@type p
+@attributes
+a 0 sp 11 0 39 62 hln 100 PART=SISC2.8P02_L1
+a 0 sp 0 0 0 0 hln 100 TEMPLATE=X^@refdes %drain %gate %source @MODEL PARAMS: ?dVth|dVth=@dVth| ?dRdson|dRdson=@dRdson| ?dgfs|dgfs=@dgfs| ?dC|dC=@dC| 
+a 0 s 9 0 -3 0 hcn 100 REFDES=X?
+a 0 sp 0:13 0 5 50 hcn 100 MODEL=SISC2_8P02_L1
+*symbol BSS215P_L1 ako DMOS_L1P
+d Infineon p-channel MOSFET
+@type p
+@attributes
+a 0 sp 11 0 39 62 hln 100 PART=BSS215P_L1
+a 0 sp 0 0 0 0 hln 100 TEMPLATE=X^@refdes %drain %gate %source @MODEL PARAMS: ?dVth|dVth=@dVth| ?dRdson|dRdson=@dRdson| ?dgfs|dgfs=@dgfs| ?dC|dC=@dC| 
+a 0 s 9 0 -3 0 hcn 100 REFDES=X?
+a 0 sp 0:13 0 5 50 hcn 100 MODEL=BSS215P_L1
+*symbol BSL215P_L1 ako DMOS_L1P
+d Infineon p-channel MOSFET
+@type p 9.1
+@attributes
+a 0 sp 11 0 39 62 hln 100 PART=BSL215P_L1
+a 0 sp 0 0 0 0 hln 100 TEMPLATE=X^@refdes %drain %gate %source @MODEL PARAMS: ?dVth|dVth=@dVth| ?dRdson|dRdson=@dRdson| ?dgfs|dgfs=@dgfs| ?dC|dC=@dC| 
+a 0 s 9 0 -3 0 hcn 100 REFDES=X?
+a 0 sp 0:13 0 5 50 hcn 100 MODEL=BSL215P_L1
