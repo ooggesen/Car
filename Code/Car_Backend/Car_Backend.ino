@@ -5,7 +5,9 @@
 #include <WiFiNINA.h>
 #include "memorysaver.h"
 #include "arduino_secrets.h"
+//#include "protothreads.h"
 
+//Motor def
 #define MOTOR_L 1
 #define MOTOR_R 2
 #define MOTOR_L_PIN 4
@@ -15,18 +17,25 @@
 #define MOTOR_R_PLUS 21
 #define MOTOR_R_MINUS 20
 
+//Arducam def
+#define CS1 6
+#define CS2 7
+
 //General stuff
 bool debug = true;
 bool two_cam = false;
 void tests();
 
 //Arducam stuff
-const int CS1 = 6;
-const int CS2 = 7;
 ArduCAM Cam1(OV5642, CS1);
 ArduCAM Cam2(OV5642, CS2);
-int take_photo(char sel);
+int take_and_send_photo(ArduCAM *cam_nr);
+int take_photo(ArduCAM *cam_nr);
 void init_arducam(ArduCAM* cam_nr);
+void test_arducam();
+uint8_t read_and_send_fifo_arducam(ArduCAM* cam_nr);
+
+void start_capture(ArduCAM *cam_nr);
 
 //Motor stuff
 void set_motor(char sel, int pwr_per);
@@ -38,16 +47,20 @@ void update_motor(int motor_plus, int motor_minus, int motor_dir, int pwr_per);
 //Wifi server stuff
 char ssid[] = SECRET_SSID;        // your network SSID (name)
 char pass[] = SECRET_PASS;    // your network password (use for WPA, or use as key for WEP)
-int keyIndex = 0;                 // your network key index number (needed only for WEP)
+int keyIndex = 0;  // your network key index number (needed only for WEP)
 
 int status = WL_IDLE_STATUS;
 WiFiServer server(80); //port 80
+WiFiClient *current_client;
 void print_wifi_status();
 void init_wifi();
 void wifi_server_loop();
 void match_com(String in);
-void wifi_send(uint8_t * buff, size_t sze);
+void wifi_send(byte data);
 
+//Debug stuff
+void print_debug(String text);
+void println_debug(String text);
 
 void setup() {
   // put your setup code here, to run once:
@@ -55,39 +68,31 @@ void setup() {
   if (debug){
     Serial.begin(9600);
     while(!Serial);
-    Serial.println("Starting MKRWifi1010!");
+    Serial.println("\nStarting MKRWifi1010!");
   }
 
   init_wifi();
   
-  //Initializing for Arducam
-  if (debug){
-    Serial.println("Initializing Arducam!");
-  }
-  SPI.begin();
-  
-  //Check SPI connection for Cam 1
-  digitalWrite(CS1, HIGH);
-  digitalWrite(CS2, HIGH);
-
-  //init_arducam(&Cam1);
+  init_arducam(&Cam1);
   
   if (two_cam){
-    //init_arducam(&Cam2);
+    println_debug("Cam 2:");
+    init_arducam(&Cam2);
   }
-  if (debug){
-    Serial.println("Setup done!");
-  }
+  println_debug("Setup done!\n");
+  
+  tests();
 }
 
 void loop() {
-  //tests();
-
   wifi_server_loop();
 }
 
 void tests(){
-  test_motor();
+  println_debug("Starting tests!");
+  //test_motor();
+  test_arducam();
+  println_debug("Test finished!\n");
 }
 
 /*----------------Motor function declarations----------------*/
@@ -123,14 +128,12 @@ void init_motor(){
 }
 
 void test_motor(){
-  if (debug){
-    Serial.println("Starting motor tests!");
+  {
+    println_debug("Starting motor tests!");
   }
   for (int i = -100; i<=100; i+=10){
-    if (debug){
-      Serial.print("Setting pwr to: ");
-      Serial.println(i);
-    }
+    print_debug("Setting pwr to: ");
+    println_debug((String) i);  
     set_motor(MOTOR_L, i);
     delay(2000);
     //set_motor(MOTOR_R, i);
@@ -158,64 +161,57 @@ void update_motor(int motor_plus, int motor_minus, int motor_dir, int pwr_per){
 /*----------------Wifi function declarations----------------*/
 
 void print_wifi_status(){
-  if (debug){
     // print the SSID of the network you're attached to:
-    Serial.print("SSID: ");
-    Serial.println(WiFi.SSID());
+    print_debug("SSID: ");
+    println_debug(WiFi.SSID());
   
     // print your board's IP address:
     IPAddress ip = WiFi.localIP();
-    Serial.print("IP Address: ");
-    Serial.println(ip);
+    print_debug("IP Address: ");
+    if (debug) {
+      Serial.println(ip);
+    }
+    //println_debug((String)ip);
   
     // print the received signal strength:
     long rssi = WiFi.RSSI();
-    Serial.print("signal strength (RSSI):");
-    Serial.print(rssi);
-    Serial.println(" dBm");
-  }
+    print_debug("signal strength (RSSI):");
+    print_debug((String) rssi);
+    println_debug(" dBm");
 }
 
 void init_wifi(){
-  if (debug){
-    Serial.println("Initiliaizing wifi connection!");
-  }
+  println_debug("Initiliaizing wifi connection!");
   if (WiFi.status() == WL_NO_MODULE) {
-    if (debug){
-      Serial.println("Communication with WiFi module failed!"); 
-    }
+    println_debug("Communication with WiFi module failed!"); 
     while (true);
   }
   String fv = WiFi.firmwareVersion();
-  if (fv < WIFI_FIRMWARE_LATEST_VERSION && debug) {
-    Serial.println("Please upgrade the firmware");
+  if (fv < WIFI_FIRMWARE_LATEST_VERSION) {
+    println_debug("Please upgrade the firmware");
   }
 
   while (status != WL_CONNECTED) {
-    if (debug){
-      Serial.print("Attempting to connect to Network named: ");
-      Serial.println(ssid);                   
-    }
-    // Connect to WPA/WPA2 network. Change this line if using open or WEP network:
+    print_debug("Attempting to connect to Network named: ");
+    println_debug(ssid);
     unsigned char ip[] = {192, 168, 1, 240};
     WiFi.config(ip);
     status = WiFi.begin(ssid, pass);
     delay(10000);
   }
-  server.begin();                          
-  if (debug){
-    Serial.println("Successfully connected!");
-    print_wifi_status();                        // you're connected now, so print out the status
-  }
+  server.begin();     
+                       
+  println_debug("Successfully connected!");
+  print_wifi_status();           
 }
 
 void wifi_server_loop(){
   WiFiClient client = server.available();
 
-  if (client) {                             // if you get a client,
-    if (debug){
-      Serial.println("new client");           // print a message out the serial port
-    }
+  if (client) {   
+    current_client = &client;                  
+    println_debug("\nnew client");         
+    
     String currentLine = "";                
     while (client.connected()) {           
       if (client.available()) {            
@@ -230,18 +226,22 @@ void wifi_server_loop(){
             client.println();
 
             client.println(
-              "Send GET PHOTO_F to receive a photo from the front camera!");
+              "Send GET PHOTO_1 to receive a photo from the first camera!"
+              );
             client.println(
-              "Send GET PHOTO_T to receive a photo from the top camera!");
+              "Send GET PHOTO_T to receive a photo from the top camera!"
+              );
             client.println(
-              "Send SET MOTOR_L NUM to to set the power of the left motor to NUM percent!");
+              "Send SET MOTOR_L NUM to to set the power of the left motor to NUM percent!"
+              );
             client.println(
-              "Send SET MOTOR_R NUM to to set the power of the left motor to NUM percent!");
+              "Send SET MOTOR_R NUM to to set the power of the left motor to NUM percent!"
+              );
            
             client.println();
             break;
           } else {
-            match_com(currentLine);
+            match_com(currentLine);     //Executes commands
             currentLine = "";
           }
         } else if (c != '\r') {
@@ -250,165 +250,214 @@ void wifi_server_loop(){
       }
     }
     client.stop();
-    if (debug){
-      Serial.println("client disconnected");
-    }
+
+    println_debug("client disconnected");
   }
 }
 
 void match_com(String in){
-  if (in.indexOf("GET PHOTO_F") >= 0) {                                          //TODO send the photos to the http client
-    //client.write(); //Send data TODO
-  }
-  if (in.indexOf("GET PHOTO_T") >= 0) {
-    //client.write(); //Send data TODO
-  }
-  if (in.indexOf("SET MOTOR_R") >= 0) {
+  if (in == "GET PHOTO_1"){//in.indexOf("GET PHOTO_1") >= 0) {  
+    println_debug("Take photo with 1st camera!");
+    take_and_send_photo(&Cam1);
+  }else if (in.indexOf("GET PHOTO_2") >= 0 && two_cam) {
+    println_debug("Take photo with 2nd camera!");
+    take_and_send_photo(&Cam2);
+  }else if (in.indexOf("SET MOTOR_R") >= 0) {
     unsigned int index =  in.indexOf("SET MOTOR_R") + 12;
     int pwr = in.substring(index).toInt();
     set_motor(MOTOR_R, pwr);
-    if (debug){
-      Serial.print("Set right motor to ");
-      Serial.print(pwr);
-      Serial.print(" power.\n");
-    }
-  }
-  if (in.indexOf("SET MOTOR_L") >= 0) {
+    
+    print_debug("Set right motor to ");
+    print_debug((String) pwr);
+    print_debug(" power.\n");
+  }else if (in.indexOf("SET MOTOR_L") >= 0) {
     unsigned int index =  in.indexOf("SET MOTOR_L") + 12;
     int pwr = in.substring(index).toInt();
     set_motor(MOTOR_L, pwr);
-    if (debug){
-      Serial.print("Set left motor to ");
-      Serial.print(pwr);
-      Serial.print(" power.\n");
-    }
+    
+    print_debug("Set left motor to ");
+    print_debug((String) pwr);
+    print_debug(" power.\n");
   }
 }
 
-void wifi_send(uint8_t * buff, size_t sze){
-  //TODO
+void wifi_send(byte data){
+  current_client->write(data);
 }
-
 
 /*----------------Arducam function declarations----------------*/
 
 void init_arducam(ArduCAM* cam_nr){
+  SPI.begin();
+  
+  //Check SPI connection for Cam 1
+  digitalWrite(CS1, HIGH);
+  digitalWrite(CS2, HIGH);
+
+  Wire.begin();
+  
   uint8_t vid, pid;
   uint8_t temp; 
+
+  println_debug("Initialize Arducam!");
   
   cam_nr->write_reg(0x07, 0x80);
   delay(100);
   cam_nr->write_reg(0x07, 0x00);
   delay(100);
-  
+
+  println_debug("Checking SPI connection!");
+
   while(1){
     //Check if the ArduCAM SPI bus is OK
     cam_nr->write_reg(ARDUCHIP_TEST1, 0x55);
     temp = cam_nr->read_reg(ARDUCHIP_TEST1);
     if (temp != 0x55){
-      if (debug){
-        Serial.println(F("Cam1: ACK CMD SPI interface Error! END")); 
-      }      
+      println_debug(F("Cam: ACK CMD SPI interface Error! END"));     
       delay(1000);continue;
     }else{
-      if (debug){
-        Serial.println(F("Cam1: ACK CMD SPI interface OK. END")); 
-      }   
+      println_debug(F("Cam: ACK CMD SPI interface OK. END")); 
       break;  
     }
   }
 
-  //Check if correct module is connected for Cam1
+  println_debug("Checking if camera is of type OV5642!");
   while(1){
-    //Check if the camera module type is OV5642
+    println_debug("Writing Register!");
     cam_nr->wrSensorReg16_8(0xff, 0x01);
+    println_debug("Reading vid!");
     cam_nr->rdSensorReg16_8(OV5642_CHIPID_HIGH, &vid);
+    println_debug("Reading pid!");
     cam_nr->rdSensorReg16_8(OV5642_CHIPID_LOW, &pid);
+    
     if((vid != 0x56) || (pid != 0x42)){
-      if (debug){
-        Serial.println(F("Cam1: ACK CMD Can't find OV5642 module! END")); 
-      }    
+      println_debug(F("Cam: ACK CMD Can't find OV5642 module! END"));  
       delay(1000);continue;
     }
     else{
-      if (debug){
-        Serial.println(F("Cam1: ACK CMD OV5642 detected. END"));  
-      }
+      println_debug(F("Cam: ACK CMD OV5642 detected. END"));  
       break;
     } 
   }
-  //Change to JPEG capture mode and initialize Cam1
+
+  println_debug("Initialize the settings!");
+
   cam_nr->set_format(JPEG);
   cam_nr->InitCAM();
 
   cam_nr->write_reg(ARDUCHIP_TIM, VSYNC_LEVEL_MASK);   //VSYNC is active HIGH
-  cam_nr->OV5642_set_JPEG_size(OV5642_1600x1200);
+  cam_nr->OV5642_set_JPEG_size(OV5642_1024x768);
+  //myCAM.OV5642_set_Sharpness(Auto_Sharpness_default);
   delay(1000);
   cam_nr->clear_fifo_flag();
   cam_nr->write_reg(ARDUCHIP_FRAMES,0x00);  
 }
 
-int take_photo(ArduCAM myCAM){
-  uint8_t temp = 0, temp_last = 0;
-  uint32_t length = 0;
-  bool is_header = false;
-
-  myCAM.flush_fifo();
-  myCAM.clear_fifo_flag();
-  //Start capture
-  myCAM.start_capture();
-  if (myCAM.get_bit(ARDUCHIP_TRIG, CAP_DONE_MASK)){
-    delay(50);
-    length = myCAM.read_fifo_length();
-    
-    if (debug){
-      Serial.println(length, DEC);
-    }
-    if (length >= MAX_FIFO_SIZE) //512 kb
-    {
-      if (debug){
-        Serial.println(F("ACK CMD Over size. END"));
-      }
-      return -1;
-    }
-    if (length == 0 ) //0 kb
-    {
-      if (debug){
-        Serial.println(F("ACK CMD Size is 0. END"));
-      }
-      return -1;
-    }
-    myCAM.CS_LOW();
-    myCAM.set_fifo_burst();//Set fifo burst mode
-    temp =  SPI.transfer(0x00);
-    length --;
-    while ( length-- )
-    {
-      temp_last = temp;
-      temp =  SPI.transfer(0x00);
-      if (is_header == true)
-      {
-        if (debug){
-          Serial.write(temp);                         //TODO tmp probably contains the picture data and it needs to be send per Wifi to the client.
-        }
-      }
-      else if ((temp == 0xD8) & (temp_last == 0xFF))
-      {
-        is_header = true;
-        if (debug){
-          Serial.println(F("ACK IMG END"));
-          Serial.write(temp_last);
-          Serial.write(temp);
-        }
-      }
-      if ( (temp == 0xD9) && (temp_last == 0xFF) ) //If find the end ,break while,
-      break;
-      delayMicroseconds(15);
-    }
-    myCAM.CS_HIGH();
-    is_header = false;
-    myCAM.clear_fifo_flag();
-    }
+int take_and_send_photo(ArduCAM *cam_nr){
+  start_capture(cam_nr);
+  read_and_send_fifo_arducam(cam_nr);
+  cam_nr->clear_fifo_flag();
   
   return 0;
+}
+
+
+int take_photo(ArduCAM *cam_nr){
+    start_capture(cam_nr);
+    cam_nr->clear_fifo_flag();
+
+    return 0;
+}
+
+void start_capture(ArduCAM *cam_nr){
+  println_debug("Init fifo!");
+  cam_nr->flush_fifo();
+  cam_nr->clear_fifo_flag();
+
+  println_debug("Starting capture!");
+  cam_nr->start_capture();
+  while (!cam_nr->get_bit(ARDUCHIP_TRIG, CAP_DONE_MASK)); //Blocks program execution
+  delay(50);
+  println_debug("Capture finished!");
+}
+
+void test_arducam(){
+  println_debug("Making Photo with Cam1!");
+  take_photo(&Cam1);
+  delay(1000);
+
+  if (two_cam) {
+    println_debug("Making Photo with Cam2!");
+    take_photo(&Cam2);
+    delay(1000);
+  }
+}
+
+uint8_t read_and_send_fifo_arducam(ArduCAM* cam_nr){
+  uint8_t temp = 0, temp_last = 0;
+  uint32_t length = cam_nr->read_fifo_length();
+  bool is_header = false;
+
+  println_debug("Starting transmission!");
+  if (debug){
+    print_debug("Size of photo in bytes: ");
+    Serial.println(length, DEC);
+  }
+  current_client->write((char*)&length, (size_t) sizeof(length));
+  //delay(100);
+  
+  if (length >= MAX_FIFO_SIZE) //512 kb
+  {
+    println_debug(F("ACK CMD Over size. END"));
+    return 1;
+  }
+  if (length == 0 ) //0 kb
+  {
+    println_debug(F("ACK CMD Size is 0. END"));
+    return 1;
+  }
+  cam_nr->CS_LOW();
+  cam_nr->set_fifo_burst();//Set fifo burst mode
+  while ( length--)
+  {
+//    temp_last = temp;
+    temp =  SPI.transfer(0x00);
+    current_client->write(temp);
+//    if (is_header == true)
+//    {
+//      current_client->write(temp);
+//      //delay(10);
+//    }
+//    else 
+//    if ((temp == 0xD8) & (temp_last == 0xFF))
+//    {
+//      is_header = true;
+//      println_debug(F("ACK IMG END"));
+//      current_client->write(temp_last);
+//      current_client->write(temp);
+//      //delay(10);
+//    }
+//    if ((temp == 0xD9) && (temp_last == 0xFF) ) break;
+    delayMicroseconds(15);
+  }
+  cam_nr->CS_HIGH();
+  is_header = false;
+  println_debug("Finished transmission!");
+  return 0;
+}
+
+//--------------------- debug stuff ------------------------
+
+void print_debug(String text){
+  if (debug){
+    Serial.print(text);
+    //Serial.flush();
+  }
+}
+
+void println_debug(String text){
+  if (debug){
+    Serial.println(text);
+    //Serial.flush();
+  }
 }

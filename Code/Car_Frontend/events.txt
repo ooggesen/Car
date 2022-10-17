@@ -1,7 +1,0 @@
-{"event_type": "down", "scan_code": 1, "time": 1661769001.534312, "is_keypad": 0}
-{"event_type": "down", "scan_code": 2, "time": 1661769001.687915, "is_keypad": 0}
-{"event_type": "up", "scan_code": 1, "time": 1661769001.725603, "is_keypad": 0}
-{"event_type": "up", "scan_code": 2, "time": 1661769001.8715808, "is_keypad": 0}
-{"event_type": "down", "scan_code": 13, "time": 1661769002.150599, "is_keypad": 0}
-{"event_type": "up", "scan_code": 13, "time": 1661769002.255886, "is_keypad": 0}
-{"event_type": "down", "scan_code": 36, "name": "enter", "time": 1661769003.3103528, "is_keypad": 0}
