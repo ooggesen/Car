@@ -5,7 +5,7 @@
 #include <WiFiNINA.h>
 #include "memorysaver.h"
 #include "arduino_secrets.h"
-//#include "protothreads.h"
+#include "protothreads.h"
 
 //Motor def
 #define MOTOR_L 1
@@ -29,12 +29,24 @@ void tests();
 //Arducam stuff
 ArduCAM Cam1(OV5642, CS1);
 ArduCAM Cam2(OV5642, CS2);
-int take_and_send_photo(ArduCAM *cam_nr);
+ArduCAM *Curr_cam;
+volatile uint8_t temp, temp_last;
+volatile uint32_t length;
+int take_and_send_photo();//ArduCAM *cam_nr);
 int take_photo(ArduCAM *cam_nr);
 void init_arducam(ArduCAM* cam_nr);
 void test_arducam();
-uint8_t read_and_send_fifo_arducam(ArduCAM* cam_nr);
-
+//uint8_t read_and_send_fifo_arducam(ArduCAM* cam_nr);
+enum cam_event_t{start_cap1, start_cap2, cap_done, clear_fifo, done, def} cam_event;
+enum cam_state_t{idle, init1, init2, photo, terminate} cam_state;
+enum cam_state_t transition[5][6]=
+  { {init1    , init2    , idle     , idle     , idle , idle}, //idle
+    {init1    , init1    , photo    , init1    , init1, init1}, //init1
+    {init2    , init2    , photo    , init2    , init2, init1}, //init2
+    {photo    , photo    , photo    , terminate, photo, photo}, //photo
+    {terminate, terminate, terminate, terminate, idle , terminate} //terminate
+    };
+void cam_fsm();
 void start_capture(ArduCAM *cam_nr);
 
 //Motor stuff
@@ -48,13 +60,15 @@ void update_motor(int motor_plus, int motor_minus, int motor_dir, int pwr_per);
 char ssid[] = SECRET_SSID;        // your network SSID (name)
 char pass[] = SECRET_PASS;    // your network password (use for WPA, or use as key for WEP)
 int keyIndex = 0;  // your network key index number (needed only for WEP)
+String currentLine;
+char c;
 
 int status = WL_IDLE_STATUS;
 WiFiServer server(80); //port 80
-WiFiClient *current_client;
+WiFiClient current_client;
 void print_wifi_status();
 void init_wifi();
-void wifi_server_loop();
+//int wifi_server_loop();
 void match_com(String in);
 void wifi_send(byte data);
 
@@ -62,8 +76,130 @@ void wifi_send(byte data);
 void print_debug(String text);
 void println_debug(String text);
 
+//-----------------------------------ProtoThread stuff-------------------------------------------------------------
+pt pt_wifi_server;
+int wifi_server_loop(struct pt* pt){
+  PT_BEGIN(pt);
+
+  current_client = server.available();
+
+  if (current_client) {                    
+    println_debug("\nnew client");
+    current_client.flush();         
+    
+    currentLine = "";                
+    while (current_client.connected()) { 
+      if (current_client.available()) {            
+        c = current_client.read();            
+        if (debug){
+          //Serial.write(c);                    
+        }
+        if (c == '\n') {                    
+          if (currentLine.length() == 0) {
+            current_client.println("HTTP/1.1 200 OK");
+            current_client.println("Content-type:text/html");
+            current_client.println();
+
+            current_client.println(
+              "Send GET PHOTO_1 to receive a photo from the first camera!"
+              );
+            current_client.println(
+              "Send GET PHOTO_T to receive a photo from the top camera!"
+              );
+            current_client.println(
+              "Send SET MOTOR_L NUM to to set the power of the left motor to NUM percent!"
+              );
+            current_client.println(
+              "Send SET MOTOR_R NUM to to set the power of the left motor to NUM percent!"
+              );
+           
+            current_client.println();
+            break;
+          } else {
+            match_com(currentLine);     //Executes commands
+            currentLine = "";
+          }
+        } else if (c != '\r') {
+          currentLine += c;
+        }
+      }
+      PT_YIELD(pt);
+    }
+    current_client.stop();
+
+    println_debug("client disconnected");
+  }
+
+  PT_END(pt);
+}
+
+pt pt_send_photo;
+int read_and_send_fifo_arducam(ArduCAM* cam_nr, struct pt* pt){
+  PT_BEGIN(pt);
+
+  temp = 0; temp_last = 0;
+  length = cam_nr->read_fifo_length();
+  //bool is_header = false;
+
+  println_debug("Starting transmission!");
+  if (debug){
+    print_debug("Size of photo in bytes: ");
+    Serial.println(length, DEC);
+  }
+  if (current_client.connected()){
+    current_client.write((char*)&length, (size_t) sizeof(length));
+  }
+  
+  if (length >= MAX_FIFO_SIZE) //512 kb
+  {
+    println_debug(F("ACK CMD Over size. END"));
+    return 1;
+  }
+  if (length == 0 ) //0 kb
+  {
+    println_debug(F("ACK CMD Size is 0. END"));
+    return 1;
+  }
+  cam_nr->CS_LOW();
+  cam_nr->set_fifo_burst();//Set fifo burst mode
+  while (length-- && current_client.connected())
+  {
+//    temp_last = temp;
+    temp =  SPI.transfer(0x00);
+    current_client.write(temp);
+//    if (is_header == true)
+//    {
+//      current_client.write(temp);
+//      //delay(10);
+//    }
+//    else 
+//    if ((temp == 0xD8) & (temp_last == 0xFF))
+//    {
+//      is_header = true;
+//      println_debug(F("ACK IMG END"));
+//      current_client.write(temp_last);
+//      current_client.write(temp);
+//      //delay(10);
+//    }
+//    if ((temp == 0xD9) && (temp_last == 0xFF) ) break;
+    //delayMicroseconds(15);
+    PT_YIELD(pt);
+  }
+  cam_nr->CS_HIGH();
+  //is_header = false;
+  println_debug("Finished transmission!");
+  cam_event = clear_fifo;
+  
+  PT_END(pt);
+}
+//-----------------------------------setup-------------------------------------------------------------
 void setup() {
   // put your setup code here, to run once:
+  PT_INIT(&pt_wifi_server);
+  PT_INIT(&pt_send_photo);
+  cam_state = idle;
+  cam_event = def;
+  
   init_motor();
   if (debug){
     Serial.begin(9600);
@@ -84,8 +220,11 @@ void setup() {
   tests();
 }
 
+//-----------------------------------loop-------------------------------------------------------------
+
 void loop() {
-  wifi_server_loop();
+  PT_SCHEDULE(wifi_server_loop(&pt_wifi_server));
+  cam_fsm();
 }
 
 void tests(){
@@ -95,7 +234,7 @@ void tests(){
   println_debug("Test finished!\n");
 }
 
-/*----------------Motor function declarations----------------*/
+//--------------------------Motor function declarations--------------------------
 
 void set_motor(char sel, int pwr_per){
   assert(pwr_per <= 100 && pwr_per >= -100);
@@ -158,7 +297,7 @@ void update_motor(int motor_plus, int motor_minus, int motor_dir, int pwr_per){
   }
 }
 
-/*----------------Wifi function declarations----------------*/
+//--------------------------Wifi function declarations--------------------------
 
 void print_wifi_status(){
     // print the SSID of the network you're attached to:
@@ -205,63 +344,13 @@ void init_wifi(){
   print_wifi_status();           
 }
 
-void wifi_server_loop(){
-  WiFiClient client = server.available();
-
-  if (client) {   
-    current_client = &client;                  
-    println_debug("\nnew client");         
-    
-    String currentLine = "";                
-    while (client.connected()) {           
-      if (client.available()) {            
-        char c = client.read();            
-        if (debug){
-          //Serial.write(c);                    
-        }
-        if (c == '\n') {                    
-          if (currentLine.length() == 0) {
-            client.println("HTTP/1.1 200 OK");
-            client.println("Content-type:text/html");
-            client.println();
-
-            client.println(
-              "Send GET PHOTO_1 to receive a photo from the first camera!"
-              );
-            client.println(
-              "Send GET PHOTO_T to receive a photo from the top camera!"
-              );
-            client.println(
-              "Send SET MOTOR_L NUM to to set the power of the left motor to NUM percent!"
-              );
-            client.println(
-              "Send SET MOTOR_R NUM to to set the power of the left motor to NUM percent!"
-              );
-           
-            client.println();
-            break;
-          } else {
-            match_com(currentLine);     //Executes commands
-            currentLine = "";
-          }
-        } else if (c != '\r') {
-          currentLine += c;
-        }
-      }
-    }
-    client.stop();
-
-    println_debug("client disconnected");
-  }
-}
-
 void match_com(String in){
-  if (in == "GET PHOTO_1"){//in.indexOf("GET PHOTO_1") >= 0) {  
+  if (in.indexOf("GET PHOTO_1") >= 0) {  
     println_debug("Take photo with 1st camera!");
-    take_and_send_photo(&Cam1);
+    cam_event = start_cap1;
   }else if (in.indexOf("GET PHOTO_2") >= 0 && two_cam) {
     println_debug("Take photo with 2nd camera!");
-    take_and_send_photo(&Cam2);
+    cam_event = start_cap2;
   }else if (in.indexOf("SET MOTOR_R") >= 0) {
     unsigned int index =  in.indexOf("SET MOTOR_R") + 12;
     int pwr = in.substring(index).toInt();
@@ -282,10 +371,42 @@ void match_com(String in){
 }
 
 void wifi_send(byte data){
-  current_client->write(data);
+  current_client.write(data);
 }
 
-/*----------------Arducam function declarations----------------*/
+//--------------------------Arducam function declarations-------------------------- 
+
+void cam_fsm(){
+  //println_debug((String) cam_event);
+  cam_state = transition[cam_state][cam_event];
+  cam_event = def;
+  
+  switch(cam_state){
+    case idle:
+      break;
+    case init1:
+      //println_debug((String)cam_state);
+      Curr_cam = &Cam1;
+      take_and_send_photo(Curr_cam);
+      break;
+    case init2:
+      //println_debug((String)cam_state);
+      Curr_cam = &Cam2;
+      take_and_send_photo(Curr_cam);
+      break;
+    case photo:
+      //println_debug((String)cam_state);
+      PT_SCHEDULE(read_and_send_fifo_arducam(Curr_cam, &pt_send_photo)); 
+      break;
+    case terminate:
+      //println_debug((String)cam_state);
+      Curr_cam->clear_fifo_flag();
+      current_client.flush();
+      Serial.flush();
+      cam_event = done;
+      break;
+  }
+}
 
 void init_arducam(ArduCAM* cam_nr){
   SPI.begin();
@@ -355,8 +476,8 @@ void init_arducam(ArduCAM* cam_nr){
 
 int take_and_send_photo(ArduCAM *cam_nr){
   start_capture(cam_nr);
-  read_and_send_fifo_arducam(cam_nr);
-  cam_nr->clear_fifo_flag();
+  //PT_SCHEDULE(read_and_send_fifo_arducam(cam_nr, &pt_send_photo));
+  cam_event = cap_done;
   
   return 0;
 }
@@ -377,8 +498,8 @@ void start_capture(ArduCAM *cam_nr){
   println_debug("Starting capture!");
   cam_nr->start_capture();
   while (!cam_nr->get_bit(ARDUCHIP_TRIG, CAP_DONE_MASK)); //Blocks program execution
-  delay(50);
   println_debug("Capture finished!");
+  delay(50);
 }
 
 void test_arducam(){
@@ -393,60 +514,7 @@ void test_arducam(){
   }
 }
 
-uint8_t read_and_send_fifo_arducam(ArduCAM* cam_nr){
-  uint8_t temp = 0, temp_last = 0;
-  uint32_t length = cam_nr->read_fifo_length();
-  bool is_header = false;
-
-  println_debug("Starting transmission!");
-  if (debug){
-    print_debug("Size of photo in bytes: ");
-    Serial.println(length, DEC);
-  }
-  current_client->write((char*)&length, (size_t) sizeof(length));
-  //delay(100);
-  
-  if (length >= MAX_FIFO_SIZE) //512 kb
-  {
-    println_debug(F("ACK CMD Over size. END"));
-    return 1;
-  }
-  if (length == 0 ) //0 kb
-  {
-    println_debug(F("ACK CMD Size is 0. END"));
-    return 1;
-  }
-  cam_nr->CS_LOW();
-  cam_nr->set_fifo_burst();//Set fifo burst mode
-  while ( length--)
-  {
-//    temp_last = temp;
-    temp =  SPI.transfer(0x00);
-    current_client->write(temp);
-//    if (is_header == true)
-//    {
-//      current_client->write(temp);
-//      //delay(10);
-//    }
-//    else 
-//    if ((temp == 0xD8) & (temp_last == 0xFF))
-//    {
-//      is_header = true;
-//      println_debug(F("ACK IMG END"));
-//      current_client->write(temp_last);
-//      current_client->write(temp);
-//      //delay(10);
-//    }
-//    if ((temp == 0xD9) && (temp_last == 0xFF) ) break;
-    delayMicroseconds(15);
-  }
-  cam_nr->CS_HIGH();
-  is_header = false;
-  println_debug("Finished transmission!");
-  return 0;
-}
-
-//--------------------- debug stuff ------------------------
+//------------------------------- debug stuff ----------------------------------
 
 void print_debug(String text){
   if (debug){

@@ -133,18 +133,22 @@ class car_control:
 	def wifi_receive(self) :
 		#For recption of photos only
 		#TODO not yet tested
-		length = self.car_socket.recv(128)
-		#print(length.hex())
-		length = int.from_bytes(length, byteorder='little', signed=False)
-		print("Size of image: ", length)
+		try:
+			length = self.car_socket.recv(32)#, socket.MSG_WAITALL)
+			#print(length.hex())
+			length = int.from_bytes(length, byteorder='little', signed=False)
+			print("Size of image: ", length)
 
-		self.car_socket.settimeout(None)
-		buffer = self.car_socket.recv(length, socket.MSG_WAITALL)
-		self.car_socket.settimeout(10)
-		#print(buffer.hex())
-		pil_image = Image.open(io.BytesIO(buffer))#, formats="JPEG")
-		pil_image.save("Test.jpeg", "JPEG")
-		return buffer
+			self.car_socket.settimeout(None)
+			buffer = self.car_socket.recv(length, socket.MSG_WAITALL)
+			self.car_socket.settimeout(10)
+			#print(buffer.hex())
+			pil_image = Image.open(io.BytesIO(buffer))#, formats="JPEG")
+			pil_image.save("Test.jpeg", "JPEG")
+			return buffer
+		except:
+			self.wifi_disconnect()
+			raise OSError("Transmission failure!")
 
 # -----------------------------main------------------------------
 	def main(self) :
