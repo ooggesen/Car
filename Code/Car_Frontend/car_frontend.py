@@ -6,16 +6,6 @@ import threading
 from PIL import Image
 import io
 
-class Receive_Thread(threading.Thread):
-   def __init__(self, socket, buffer_size):
-      threading.Thread.__init__(self)
-      self.buffer_size = buffer_size
-      self.socker = socket
-   def run(self):
-      print ("Starting " + self.name)
-      print_time(self.name, self.counter, 5)
-      print ("Exiting " + self.name)
-
 class car_control:
 	def __init__(self, tcp_ip, tcp_port):
 		self.command = {"right" : "SET MOTOR_R", "left" : "SET MOTOR_L", "photo_1" : "GET PHOTO_1", "photo_2" : "GET PHOTO_2"}
@@ -23,6 +13,8 @@ class car_control:
 		self.tcp_ip = tcp_ip 
 		self.status = {"right" : 0, "left" : 0, "end" : False, "photo_1" : False, "photo_2" : False}
 		self.status_last = {"right" : 0, "left" : 0, "end" : False, "photo_1" : False, "photo_2" : False}
+		self.image_count = 0
+		self.block_cam = False
 
 	def get_tcp_ip(self):
 		return self.tcp_ip
@@ -46,29 +38,26 @@ class car_control:
 
 	def execute(self) :
 		#print("Executing")
-		end_temp = self.status["end"]
 		#print(self.status["right"], self.status_last["right"])
 		if self.status != self.status_last:
+			if self.status["end"] is True:
+				 self.wifi_disconnect()
+				 return True
+
 			self.wifi_send(self.command["left"] + " " + str(self.status["left"]) + "\n")
 			self.wifi_send(self.command["right"] + " " + str(self.status["right"]) + "\n")
 
 			if self.status["photo_1"] is True :
 				print("send photo command!\n")
 				self.wifi_send(self.command["photo_1"] + "\n")
-				self.wifi_receive()
-				print("Received photo!")
-				self.status["photo_1"] = False
+				self.daemon_image_receive()
+
 			if self.status["photo_2"] is True :
 				self.wifi_send(self.command["photo_2"] + "\n")
-				self.wifi_receive()
-				self.status["photo_2"] = False
-
-			if self.status["end"] is True:
-				 self.wifi_disconnect()
-				 end = False
+				self.daemon_image_receive()
 
 		self.status_last = self.status.copy()
-		return end_temp
+		return False
 
 	def keyboard_control(self) : 
 		self.status["left"] = 0
@@ -130,25 +119,40 @@ class car_control:
 		#print(string)
 		self.car_socket.send(string.encode('ascii'))
 
-	def wifi_receive(self) :
-		#For recption of photos only
-		#TODO not yet tested
-		try:
-			length = self.car_socket.recv(32)#, socket.MSG_WAITALL)
-			#print(length.hex())
-			length = int.from_bytes(length, byteorder='little', signed=False)
-			print("Size of image: ", length)
+	def daemon_image_receive(self):
+		x = threading.Thread(target=self.wifi_image_receive, args= (), daemon=True)
+		x.start()
 
-			self.car_socket.settimeout(None)
-			buffer = self.car_socket.recv(length, socket.MSG_WAITALL)
-			self.car_socket.settimeout(10)
-			#print(buffer.hex())
-			pil_image = Image.open(io.BytesIO(buffer))#, formats="JPEG")
-			pil_image.save("Test.jpeg", "JPEG")
-			return buffer
-		except:
-			self.wifi_disconnect()
-			raise OSError("Transmission failure!")
+	def wifi_image_receive(self) :
+		#For recption of photos only
+		if self.block_cam ==  False:
+			self.block_cam = True
+			try:
+				start = time.time()
+				length = self.car_socket.recv(32)#, socket.MSG_WAITALL)
+				#print(length.hex())
+				length = int.from_bytes(length, byteorder='little', signed=False)
+				print("Size of image: ", length)
+
+				self.car_socket.settimeout(None)
+				buffer = self.car_socket.recv(length, socket.MSG_WAITALL)
+				self.car_socket.settimeout(10)
+				#print(buffer.hex())
+				pil_image = Image.open(io.BytesIO(buffer))#, formats="JPEG")
+				pil_image.save("{}.jpeg".format(self.image_count), "JPEG")
+				self.image_count+=1
+				print("Received photo!")
+				print("In {} s".format(time.time()-start))
+				self.block_cam = False
+				return buffer
+			except:
+				print("Error in reception!")
+				self.block_cam = False
+				#self.wifi_disconnect()
+				#raise OSError("Transmission failure!")
+		else:
+			print("Camera busy!")
+			return None
 
 # -----------------------------main------------------------------
 	def main(self) :

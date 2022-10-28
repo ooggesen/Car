@@ -17,7 +17,7 @@
 #define MOTOR_R_PLUS 21
 #define MOTOR_R_MINUS 20
 
-//Arducam def
+//Arducam def 
 #define CS1 6
 #define CS2 7
 
@@ -30,9 +30,10 @@ void tests();
 ArduCAM Cam1(OV5642, CS1);
 ArduCAM Cam2(OV5642, CS2);
 ArduCAM *Curr_cam;
-volatile uint8_t temp, temp_last;
+volatile uint8_t buff[2048];
 volatile uint32_t length;
-int take_and_send_photo();//ArduCAM *cam_nr);
+int take_and_send_photo();
+unsigned i;
 int take_photo(ArduCAM *cam_nr);
 void init_arducam(ArduCAM* cam_nr);
 void test_arducam();
@@ -42,18 +43,20 @@ enum cam_state_t{idle, init1, init2, photo, terminate} cam_state;
 enum cam_state_t transition[5][6]=
   { {init1    , init2    , idle     , idle     , idle , idle}, //idle
     {init1    , init1    , photo    , init1    , init1, init1}, //init1
-    {init2    , init2    , photo    , init2    , init2, init1}, //init2
+    {init2    , init2    , photo    , init2    , init2, init2}, //init2
     {photo    , photo    , photo    , terminate, photo, photo}, //photo
     {terminate, terminate, terminate, terminate, idle , terminate} //terminate
     };
 void cam_fsm();
 void start_capture(ArduCAM *cam_nr);
+bool is_header;
 
 //Motor stuff
 void set_motor(char sel, int pwr_per);
 void init_motor();
 void test_motor();
 void update_motor(int motor_plus, int motor_minus, int motor_dir, int pwr_per); 
+void init_buff();
 
 
 //Wifi server stuff
@@ -137,9 +140,8 @@ pt pt_send_photo;
 int read_and_send_fifo_arducam(ArduCAM* cam_nr, struct pt* pt){
   PT_BEGIN(pt);
 
-  temp = 0; temp_last = 0;
+  init_buff(); i= 2; is_header = false;
   length = cam_nr->read_fifo_length();
-  //bool is_header = false;
 
   println_debug("Starting transmission!");
   if (debug){
@@ -154,43 +156,52 @@ int read_and_send_fifo_arducam(ArduCAM* cam_nr, struct pt* pt){
   {
     println_debug(F("ACK CMD Over size. END"));
     return 1;
-  }
-  if (length == 0 ) //0 kb
+  }else if (length == 0 ) //0 kb
   {
     println_debug(F("ACK CMD Size is 0. END"));
     return 1;
   }
   cam_nr->CS_LOW();
   cam_nr->set_fifo_burst();//Set fifo burst mode
+
   while (length-- && current_client.connected())
   {
-//    temp_last = temp;
-    temp =  SPI.transfer(0x00);
-    current_client.write(temp);
-//    if (is_header == true)
-//    {
-//      current_client.write(temp);
-//      //delay(10);
-//    }
-//    else 
-//    if ((temp == 0xD8) & (temp_last == 0xFF))
-//    {
-//      is_header = true;
-//      println_debug(F("ACK IMG END"));
-//      current_client.write(temp_last);
-//      current_client.write(temp);
-//      //delay(10);
-//    }
-//    if ((temp == 0xD9) && (temp_last == 0xFF) ) break;
-    //delayMicroseconds(15);
+//    buff[i] =  SPI.transfer(0x00);
+//    i++;
+    if (is_header == false){
+      buff[0] = buff[1];
+      buff[1] = SPI.transfer(0x00); 
+      if ((buff[0] == 0xFF) && (buff[1] == 0xD8))
+        is_header = true;
+    }
+   
+    if (is_header == true)
+    {
+      buff[i] =  SPI.transfer(0x00);
+      i++;
+    }
+    
+    if ( (buff[i] == 0xD9) && (buff[i-1] == 0xFF) ) break;
+    //current_client.write(buff[0]);
+    if (i>=sizeof(buff)){
+      current_client.write((char*)&buff, (size_t) (sizeof(buff) * sizeof(char))); 
+      i = 0;
+    }
     PT_YIELD(pt);
   }
+  
   cam_nr->CS_HIGH();
-  //is_header = false;
+  if (current_client.connected())
+    current_client.write((char*)&buff, (size_t) ((i-1) * sizeof(char)));
   println_debug("Finished transmission!");
   cam_event = clear_fifo;
   
   PT_END(pt);
+}
+
+void init_buff(){
+  for (int j=0; i<1024; i++) buff[j] = 0; 
+  i = 0;
 }
 //-----------------------------------setup-------------------------------------------------------------
 void setup() {
@@ -346,27 +357,27 @@ void init_wifi(){
 
 void match_com(String in){
   if (in.indexOf("GET PHOTO_1") >= 0) {  
-    println_debug("Take photo with 1st camera!");
+    println_debug("CMD: photo 1st camera!");
     cam_event = start_cap1;
   }else if (in.indexOf("GET PHOTO_2") >= 0 && two_cam) {
-    println_debug("Take photo with 2nd camera!");
+    println_debug("CMD: photo 2nd camera!");
     cam_event = start_cap2;
   }else if (in.indexOf("SET MOTOR_R") >= 0) {
     unsigned int index =  in.indexOf("SET MOTOR_R") + 12;
     int pwr = in.substring(index).toInt();
     set_motor(MOTOR_R, pwr);
     
-    print_debug("Set right motor to ");
+    print_debug("CMD: r motor ");
     print_debug((String) pwr);
-    print_debug(" power.\n");
+    print_debug(" \% power.\n");
   }else if (in.indexOf("SET MOTOR_L") >= 0) {
     unsigned int index =  in.indexOf("SET MOTOR_L") + 12;
     int pwr = in.substring(index).toInt();
     set_motor(MOTOR_L, pwr);
     
-    print_debug("Set left motor to ");
+    print_debug("CMD: l motor ");
     print_debug((String) pwr);
-    print_debug(" power.\n");
+    print_debug(" \% power.\n");
   }
 }
 
@@ -402,7 +413,6 @@ void cam_fsm(){
       //println_debug((String)cam_state);
       Curr_cam->clear_fifo_flag();
       current_client.flush();
-      Serial.flush();
       cam_event = done;
       break;
   }
@@ -467,7 +477,9 @@ void init_arducam(ArduCAM* cam_nr){
   cam_nr->InitCAM();
 
   cam_nr->write_reg(ARDUCHIP_TIM, VSYNC_LEVEL_MASK);   //VSYNC is active HIGH
-  cam_nr->OV5642_set_JPEG_size(OV5642_1024x768);
+  cam_nr->OV5642_set_JPEG_size(OV5642_1280x960); //OV5642_2592x1944, OV5642_2048x1536, OV5642_1600x1200, OV5642_1280x960, OV5642_1024x768
+  //cam_nr->OV5642_set_hue(degree_180);
+  //cam_nr->OV5642_set_Compress_quality(low_quality); //low_quality, default_quality
   //myCAM.OV5642_set_Sharpness(Auto_Sharpness_default);
   delay(1000);
   cam_nr->clear_fifo_flag();
