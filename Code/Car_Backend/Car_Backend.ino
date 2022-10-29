@@ -30,8 +30,15 @@ void tests();
 ArduCAM Cam1(OV5642, CS1);
 ArduCAM Cam2(OV5642, CS2);
 ArduCAM *Curr_cam;
+enum dec_t{
+  photo,
+  video, 
+  eof
+};
+
 volatile uint8_t buff[2048];
 volatile uint32_t length;
+volatile uint8_t tmp, tmp_last;
 int take_and_send_photo();
 unsigned i;
 int take_photo(ArduCAM *cam_nr);
@@ -39,13 +46,13 @@ void init_arducam(ArduCAM* cam_nr);
 void test_arducam();
 //uint8_t read_and_send_fifo_arducam(ArduCAM* cam_nr);
 enum cam_event_t{start_cap1, start_cap2, cap_done, clear_fifo, done, def} cam_event;
-enum cam_state_t{idle, init1, init2, photo, terminate} cam_state;
+enum cam_state_t{idle, init1, init2, photo_s, terminate} cam_state;
 enum cam_state_t transition[5][6]=
-  { {init1    , init2    , idle     , idle     , idle , idle}, //idle
-    {init1    , init1    , photo    , init1    , init1, init1}, //init1
-    {init2    , init2    , photo    , init2    , init2, init2}, //init2
-    {photo    , photo    , photo    , terminate, photo, photo}, //photo
-    {terminate, terminate, terminate, terminate, idle , terminate} //terminate
+  { {init1    , init2    , idle       , idle     , idle   , idle}, //idle
+    {init1    , init1    , photo_s    , init1    , init1  , init1}, //init1
+    {init2    , init2    , photo_s    , init2    , init2  , init2}, //init2
+    {photo_s  , photo_s  , photo_s    , terminate, photo_s, photo_s}, //photo_s
+    {terminate, terminate, terminate  , terminate, idle   , terminate} //terminate
     };
 void cam_fsm();
 void start_capture(ArduCAM *cam_nr);
@@ -141,6 +148,7 @@ int read_and_send_fifo_arducam(ArduCAM* cam_nr, struct pt* pt){
   PT_BEGIN(pt);
 
   init_buff(); i= 2; is_header = false;
+  
   length = cam_nr->read_fifo_length();
 
   println_debug("Starting transmission!");
@@ -177,22 +185,28 @@ int read_and_send_fifo_arducam(ArduCAM* cam_nr, struct pt* pt){
    
     if (is_header == true)
     {
-      buff[i] =  SPI.transfer(0x00);
+      tmp_last = tmp;
+      tmp =  SPI.transfer(0x00);
+      buff[i] = tmp;
       i++;
+
+      if ( (tmp == (char)0xD9) && (tmp_last == (char)0xFF)){
+        println_debug("Found img end!");
+        current_client.write((char*)&buff, (size_t) ((i) * sizeof(char)));
+        is_header = false;
+        length = 0;
+      }
+      if (i>=sizeof(buff)){
+        current_client.write((char*)&buff, (size_t) (sizeof(buff) * sizeof(char))); 
+        i = 0;
+      }
     }
     
-    if ( (buff[i] == 0xD9) && (buff[i-1] == 0xFF) ) break;
     //current_client.write(buff[0]);
-    if (i>=sizeof(buff)){
-      current_client.write((char*)&buff, (size_t) (sizeof(buff) * sizeof(char))); 
-      i = 0;
-    }
     PT_YIELD(pt);
   }
   
   cam_nr->CS_HIGH();
-  if (current_client.connected())
-    current_client.write((char*)&buff, (size_t) ((i-1) * sizeof(char)));
   println_debug("Finished transmission!");
   cam_event = clear_fifo;
   
@@ -405,7 +419,7 @@ void cam_fsm(){
       Curr_cam = &Cam2;
       take_and_send_photo(Curr_cam);
       break;
-    case photo:
+    case photo_s:
       //println_debug((String)cam_state);
       PT_SCHEDULE(read_and_send_fifo_arducam(Curr_cam, &pt_send_photo)); 
       break;
@@ -477,7 +491,7 @@ void init_arducam(ArduCAM* cam_nr){
   cam_nr->InitCAM();
 
   cam_nr->write_reg(ARDUCHIP_TIM, VSYNC_LEVEL_MASK);   //VSYNC is active HIGH
-  cam_nr->OV5642_set_JPEG_size(OV5642_1280x960); //OV5642_2592x1944, OV5642_2048x1536, OV5642_1600x1200, OV5642_1280x960, OV5642_1024x768
+  cam_nr->OV5642_set_JPEG_size(OV5642_2592x1944); //OV5642_2592x1944, OV5642_2048x1536, OV5642_1600x1200, OV5642_1280x960, OV5642_1024x768
   //cam_nr->OV5642_set_hue(degree_180);
   //cam_nr->OV5642_set_Compress_quality(low_quality); //low_quality, default_quality
   //myCAM.OV5642_set_Sharpness(Auto_Sharpness_default);
