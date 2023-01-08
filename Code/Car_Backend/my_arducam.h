@@ -29,7 +29,7 @@ ArduCAM Cam2(OV5642, CS2);
 bool two_cam = false;
 ArduCAM *Curr_cam;
 
-uint8_t buff[512]; //512 bytes is maximum size of bluetooth characteristik
+uint8_t buff[128]; //512 bytes is maximum size of bluetooth characteristik
 
 pt pt_send_photo;
 

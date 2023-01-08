@@ -5,8 +5,11 @@
 #include <WiFiNINA.h>
 #include "arduino_secrets.h"
 #include "my_arducam.h"
+#include "base.h"
 
 pt pt_wifi_server;
+int wifi_server_loop(struct pt* pt);
+
 WiFiServer server(80); //port 80
 WiFiClient current_client;
 
