@@ -7,8 +7,8 @@
 #include <ArduCAM.h>
 #include <SPI.h>
 
-#define CS1 6
-#define CS2 7
+#define CS1 7
+#define CS2 6
 
 enum cam_event_t{start_cap1, start_cap2, cap_done, clear_fifo, done, def};
 enum cam_state_t{idle, init1, init2, photo_s, terminate};

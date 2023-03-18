@@ -5,11 +5,11 @@ import asyncio
 
 
 class BtClient:
-    def __init__(self) -> None:
-        self.car_uuid = "FE201AB6-FAC6-1203-F10C-395C478DDC0E"
+    def __init__(self, car_uuid: str) -> None:
+        self.car_uuid = car_uuid
         self.com_uuid = "38e7bf15-7170-4bc3-935a-d5cb99622342"
         self.photo_uuid = "38e7bf16-7170-4bc3-935a-d5cb99622342"
-        self.image_count = 0
+        self.image_counter = 1
 
     def photo_callback(self, sender: int, data: bytearray):
         # print("Received photo information")
@@ -25,10 +25,11 @@ class BtClient:
         else:
             self.photo_buffer.extend(data)
         if self.photo_buffer[-1] == 0xd9 and self.photo_buffer[-2] == 0xff:
-            print(self.photo_buffer.hex())
+            # print(self.photo_buffer.hex())
             pil_image = Image.open(io.BytesIO(self.photo_buffer))
-            pil_image.save("{}.jpeg".format(self.image_count), "JPEG")
-            self.image_count += 1
+            # pil_image.save("./{}.jpg".format(self.image_counter))
+            pil_image.save("./video.jpg")
+            self.image_counter += 1
             print("Received photo!")
             self.photo_buffer = bytearray()
 
@@ -38,6 +39,8 @@ class BtClient:
                 return i
 
     async def init(self):
+        assert(self.car_uuid != None)
+
         self.wifi_n_bt = False
         self.photo_buffer = bytearray()
 

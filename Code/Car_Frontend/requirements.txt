@@ -141,3 +141,4 @@ pyobjc-framework-VideoToolbox==9.0.1
 pyobjc-framework-Virtualization==9.0.1
 pyobjc-framework-Vision==9.0.1
 pyobjc-framework-WebKit==9.0.1
+opencv-python~=4.7.0.68

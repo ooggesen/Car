@@ -170,7 +170,7 @@ void init_arducam(ArduCAM* cam_nr){
   cam_nr->InitCAM();
 
   cam_nr->write_reg(ARDUCHIP_TIM, VSYNC_LEVEL_MASK);   //VSYNC is active HIGH
-  cam_nr->OV5642_set_JPEG_size(OV5642_1280x960); //OV5642_2592x1944, OV5642_2048x1536, OV5642_1600x1200, OV5642_1280x960, OV5642_1024x768
+  cam_nr->OV5642_set_JPEG_size(OV5642_1024x768); //OV5642_2592x1944, OV5642_2048x1536, OV5642_1600x1200, OV5642_1280x960, OV5642_1024x768
   //cam_nr->OV5642_set_hue(degree_180);
   //cam_nr->OV5642_set_Compress_quality(low_quality); //low_quality, default_quality
   delay(1000);
