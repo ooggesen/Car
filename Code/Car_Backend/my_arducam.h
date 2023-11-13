@@ -7,8 +7,8 @@
 #include <ArduCAM.h>
 #include <SPI.h>
 
-#define CS1 6
-#define CS2 7
+#define CS1 7
+#define CS2 6
 
 enum cam_event_t{start_cap1, start_cap2, cap_done, clear_fifo, done, def};
 enum cam_state_t{idle, init1, init2, photo_s, terminate};
@@ -29,7 +29,7 @@ ArduCAM Cam2(OV5642, CS2);
 bool two_cam = false;
 ArduCAM *Curr_cam;
 
-uint8_t buff[512]; //512 bytes is maximum size of bluetooth characteristik
+uint8_t buff[128]; //512 bytes is maximum size of bluetooth characteristik
 
 pt pt_send_photo;
 

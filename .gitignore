@@ -1,0 +1,15 @@
+#General
+__pycache__/
+car_front_env/
+*.zip
+*.jpg
+*cache
+
+#Apple
+.DS_Store
+
+#jetbrains
+**/.idea/
+
+#KiCad
+Gerber/

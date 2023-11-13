@@ -1,19 +1,7 @@
 //#define WIFI_N_BT //Define if to use wifi instead of bluetooth, bluetooth not yet tested
 #define DEBUG //define for debug feedback through Serial
 
-#include "memorysaver.h"
-#include "my_motor.h"
-#include "my_wifi.h"
-#include "my_wifi.h"
-#include "my_bt.h"
-#include "my_arducam.h"
-
-void tests();
-void match_com(String in);
-
-//Debug stuff
-void print_debug(String text);
-void println_debug(String text);
+#include "base.h"
 
 void match_com(String in){
   if (in.indexOf("GET PHOTO_1") >= 0) {  
@@ -78,8 +66,9 @@ void loop() {
   #ifdef WIFI_N_BT
     PT_SCHEDULE(wifi_server_loop(&pt_wifi_server));
   #else
-    BLE.poll();
-    match_com((String)command.value());
+//    BLE.poll();
+//    match_com((String)command.value());
+    PT_SCHEDULE(bluetooth_receiver(&pt_bt_peripheral));
   #endif
   cam_fsm();
 }

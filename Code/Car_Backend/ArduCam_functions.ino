@@ -22,7 +22,6 @@ int read_and_send_fifo_arducam(ArduCAM* cam_nr, struct pt* pt){
     print_debug("Size of photo in bytes: ");
     Serial.println(length, DEC);
   #endif
-  send_data((char*)&length, (size_t) sizeof(length));
   
   if (length >= MAX_FIFO_SIZE) //512 kb
   {
@@ -171,10 +170,9 @@ void init_arducam(ArduCAM* cam_nr){
   cam_nr->InitCAM();
 
   cam_nr->write_reg(ARDUCHIP_TIM, VSYNC_LEVEL_MASK);   //VSYNC is active HIGH
-  cam_nr->OV5642_set_JPEG_size(OV5642_1280x960); //OV5642_2592x1944, OV5642_2048x1536, OV5642_1600x1200, OV5642_1280x960, OV5642_1024x768
+  cam_nr->OV5642_set_JPEG_size(OV5642_1024x768); //OV5642_2592x1944, OV5642_2048x1536, OV5642_1600x1200, OV5642_1280x960, OV5642_1024x768
   //cam_nr->OV5642_set_hue(degree_180);
   //cam_nr->OV5642_set_Compress_quality(low_quality); //low_quality, default_quality
-  //myCAM.OV5642_set_Sharpness(Auto_Sharpness_default);
   delay(1000);
   cam_nr->clear_fifo_flag();
   cam_nr->write_reg(ARDUCHIP_FRAMES,0x00);  
