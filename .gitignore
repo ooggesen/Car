@@ -6,7 +6,7 @@ car_front_env/
 *cache
 
 #Apple
-t.DS_Store
+.DS_Store
 
 #jetbrains
 **/.idea/
